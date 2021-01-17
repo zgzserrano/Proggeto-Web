@@ -17,11 +17,11 @@ public class Prenotazione {
         this.state = s;
     }
 
-    public Corso getCourse() {
+    public String getCourse() {
         return course;
     }
 
-    public Docente getTeacher() {
+    public String getTeacher() {
         return teacher;
     }
 
@@ -37,7 +37,7 @@ public class Prenotazione {
         return state;
     }
 
-    public Utente getUser() {
+    public String getUser() {
         return user;
     }
 
