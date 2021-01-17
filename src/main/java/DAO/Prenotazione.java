@@ -3,12 +3,12 @@ package DAO;
 public class Prenotazione {
     private int hour;
     private String day;
-    private Docente teacher;
-    private Corso course;
-    private Utente user;
+    private String teacher;
+    private String course;
+    private String  user;
     private String state;
 
-    Prenotazione(int h, String d, Docente t, Corso c, Utente u, String s){
+    Prenotazione(int h, String d, String t, String c, String u, String s){
         this.hour = h;
         this.day = d;
         this.teacher = t;
