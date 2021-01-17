@@ -40,4 +40,16 @@ public class Prenotazione {
     public Utente getUser() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "Prenotazione{" +
+                "hour=" + hour +
+                ", day='" + day + '\'' +
+                ", teacher=" + teacher +
+                ", course=" + course +
+                ", user=" + user +
+                ", state='" + state + '\'' +
+                '}';
+    }
 }
