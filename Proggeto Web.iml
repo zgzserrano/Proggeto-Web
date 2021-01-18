@@ -36,5 +36,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.7.0" level="project" />
     <orderEntry type="library" name="mysql-connector-java-5.1.44-bin1" level="application" />
+    <orderEntry type="library" name="vue" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
   </component>
 </module>

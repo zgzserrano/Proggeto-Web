@@ -1,24 +1,242 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
     <meta http-equiv="Cache-Control" content="no-store" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
-<body>r
+<body>
 
-<h2>Login Page</h2><br>
-<nav class="navbar navbar-light bg-light">
-    <form class="form-inline">
-        <button class="btn btn-outline-success" type="button">Login</button>
-    </form>
-</nav>
-</div>
-<h1> Hello World!"
-</h1>
-<br/>
-<a href="hello-servlet">Hello Servlet</a>
+    <div id="pagWeb" onload="getCells()">
+        <header>
+            <h1 id="titleWeb">Sistema di prenotazioni di ripetizioni online</h1>
+            <div v-if="!showLogin" id="logout">
+                <h3>Benvenuto {{account}}</h3>
+                <button v-on:click="logout" class="btn btn-outline-secondary"> Log Out</button>
+            </div>
+            <div v-if="showLogin" id="login">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Username</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon2">Password</span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+                </div>
+                <button v-on:click="tryLogin" class="btn btn-outline-secondary"> Log In</button>
+                <span v-if="loginFail" class="alert alert-danger" > Password o utente sbagliato </span>
+            </div>
+        </header>
+
+    <!-- Hay que poner las opciones de si ya esta registrado -->
+
+        <div id="tableShow" v-if="tableShow">
+            <h3 class="DispPrenotazione"> Prenotazioni disponibili.</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ORA/GIORNO</th>
+                        <th scope="col">LUNEDI</th>
+                        <th scope="col">MARTEDI</th>
+                        <th scope="col">MERCOLEDI</th>
+                        <th scope="col">GIOVEDI</th>
+                        <th scope="col">VENERDI</th>
+                    </tr>
+                </thead>
+                <tbody v-if="cells[0]">
+                <tr v-for="i in 4">
+                    <th scope="row">{{hours[i-1]}}</th>
+                    <td v-for="j in 5">
+                        <div v-for="k in (cells[(i-1)*5 +j-1]).free">
+                            <h4>{{k.d.name}} {{k.d.surname}}</h4>
+                            <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9,v.title)"> </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+            <p> <button v-if="!showLogin" v-on:click="reserve" class="btn btn-success" >  PRENOTARE </button> </p>
+        </div>
+
+
+    </div>
+
+    <script>
+        var pagWeb = new Vue({
+            el:'#pagWeb',
+            data: {
+                account : '',
+                showLogin : false,
+                loginFail : true,
+                link: 'hello-servlet',
+                tableShow: true,
+                name:'',
+                surname:'',
+                title:'',
+                cells: [],
+                course:'',
+                hours:[15,16,17,18],
+                days: ["LUNEDI","MARTEDI","MERCOLEDI","GIOVEDI","VENERDI"],
+                associationList: [],
+                courseList: [],
+                teacherList: [],
+                reserveList: []
+
+
+            },
+
+        methods:{
+            tryLogin:function () {
+                var self = this;
+                $.post(this.link, {action: "connection", user: this.account, password: this.pass}, function (data) {
+                    self.setPage(data); //Crear setPage
+                });
+            }
+        ,
+            logout:function () {
+                var self = this;
+                $.post(this.link, {action: "logout"}, function (data) {
+                })
+                alert("Ciao " + self.account);
+                console.log(self.account + " is logout");
+                location.reload();
+            },
+
+            reserve:function (){
+                var self = this;
+                var reserv = [];
+                if (self.checked.length > 0){
+                    for (var c of self.checked){
+                        var stringe = c.split("9");
+                        var doc = {name: stringe[2], surname: stringe[3]};
+                        var utente = {user: self.account, pass: self.pass, admin: self.admin};
+                        var corso = {titulo: stringe[4]};
+                        var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
+                        reserv.push(p);
+                        self.reserveList.push(p);
+                    }
+                    $.post(this.link, {action: "reserve", reserve: JSON.stringify(reserv)}, function () {
+                        self.getCells();
+                        self.checked = [];
+                    }, "text");
+                }
+            },
+
+            setPage:function(typeOfUser){
+                var self = this;
+                switch (typeOfUser){
+                    case "notAdmin":
+                        self.admin = false;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        self.getReserves();
+                        self.getCells();
+                        break;
+                    case "admin":
+                        self.getTeachers();
+                        self.getCourses();
+                        self.getReserves();
+                        self.getAssociations();
+                        self.getCells();
+                        self.admin = true;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        break;
+                    case "fail":
+                        self.loginFail = true;
+                        break;
+
+                }
+            },
+
+            getCells:function (){
+                var self = this;
+                $.post(this.link, {action: "freeHour", user:this.account}, function (data){
+                    self.cells = data;
+                });
+                var newCells = [];
+                for (var o of self.hours){
+                    for (var g of self.days){
+                        newCells.push(self.inCell(g,o));
+                    }
+                }
+                self.cells = newCells;
+            },
+
+            inCell:function (g,o){
+                return this.cells.filter(function (item){
+                    return item.day === g && item.hour ===o;
+                });
+            },
+
+            getReserves: function (){
+                var self = this;
+                $.post(this.link, { action: "reserveList", user: this.account}, function (data){
+                    self.reserveList = data;
+                });
+            },
+
+            getTeachers:function() {
+                var self = this;
+                $.post(this.link, {action: "teacherList", user: this.account}, function (data) {
+                    self.teacherList = data;
+                });
+            },
+            getCourses:function() {
+                var self = this;
+                $.post(this.link, {action: "courseList", user: this.account}, function (data) {
+                    self.courseList = data;
+                });
+            },
+            getAssociations:function() {
+                var self = this;
+                $.post(this.link, {action: "associationList", user: this.account}, function (data) {
+                    self.associationList = data;
+                });
+            },
+
+            CheckReserve:function (s, tittle){
+                var self = this;
+                var insert = true;
+                var id = s+ tittle;
+                var exists = false;
+                var hasOther = false;
+                var i = 0;
+
+                if (self.checked.length > 0){
+                    while (!exists && !hasOther && i < self.checked.length){
+                        exists = self.checked[i] === id;
+                        hasOther = self.checked[i].startsWith(s);
+                        i++;
+                    }
+
+                    insert = !exists && !hasOther;
+                }
+
+                if(insert){
+                    self.checked.push(id);
+                }else {
+                    document.getElementById(id)
+                    if (!exists){
+                        alert("Non si puo scegliere.")
+                    } else{
+                        self.checked.splice(i-1, 1)
+                    }
+                }
+            }
+
+
+        }
+        })
+    </script>
+
 </body>
 </html>
