@@ -182,4 +182,38 @@ public class DAO {
         return reserves;
     }
 
+    public static boolean addCoursetoDB(Corso c) {
+        Connection conn1 = null;
+        boolean created = false;
+        try{
+            conn1 = DriverManager.getConnection(url1,user,password);
+            if (conn1 != null){
+                System.out.println("Connected to database from addCoursetoDB");
+            }
+            Statement st = conn1.createStatement();
+            ResultSet rs = st.executeQuery("select * from Corso where titulo='"+c.getTitulo()+"';");
+            if(rs.next()) {
+                if (!rs.getBoolean("attiva")) {
+                    st.executeUpdate("update Corso set attiva=1 where titulo='"+c.getTitulo()+"';");
+                    created = true;
+                }
+            }
+            else{
+                st.executeUpdate("INSERT INTO `Corso` (`titulo`, `attiva`) VALUES ('" + c.getTitulo() + "', '1');");
+                created = true;
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }finally {
+            if (conn1 != null) {
+                try {
+                    conn1.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return created;
+    }
+
 }
