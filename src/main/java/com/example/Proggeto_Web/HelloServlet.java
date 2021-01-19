@@ -75,11 +75,11 @@ public class HelloServlet extends HttpServlet {
             }
 
             else if (func.equals("freeHour")) {
-                ArrayList<Celda> cells = new ArrayList<>();
+                ArrayList<Cell> cells = new ArrayList<>();
                 String[] giorni = {"LUNEDI","MARTEDI","MERCOLEDI","GIOVEDI","VENERDI"};
                 for (int i = 15; i < 19; i++){
                     for (String g:giorni) {
-                        cells.add(oraLibera(g, i));
+                        cells.add(gethourfree(i, g));
                     }
                 }
                 out.println(JSONMan.serializeJson(cells));
@@ -102,7 +102,7 @@ public class HelloServlet extends HttpServlet {
             }
 
             else if (func.equals("associationList")){
-                ArrayList<Imparte> i = mostrareAsso();
+                ArrayList<Imparte> i = showImpart();  //A ver la que me has liado juanito
                 out.println(JSONMan.serializeJson(i));
             }
 
@@ -112,18 +112,18 @@ public class HelloServlet extends HttpServlet {
 
             else if (func.equals("make")){
                 Prenotazione p = JSONMan.parseJson(req.getParameter("reserve"), Prenotazione.class);
-                effetuata(p);
+                achieve(p);
             }
 
             else if (func.equals("cancel")){
                 Prenotazione p = JSONMan.parseJson(req.getParameter("reserve"), Prenotazione.class);
-                disdire(p);
+                delete(p);
             }
 
             else if (func.equals("reserve")) {
                 Prenotazione[] pre = JSONMan.parseJson(req.getParameter("reserve"), Prenotazione[].class);
                 for (Prenotazione p : pre) {
-                    prenotare(p);
+                    reservate(p);
                 }
             }
 

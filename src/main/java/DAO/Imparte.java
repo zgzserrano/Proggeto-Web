@@ -1,31 +1,29 @@
-package dao;
+package DAO;
+
+import java.util.ArrayList;
 
 public class Imparte {
-    private Docente docente;
-    private Corso course;
-    private String attiva;
+    private Docente teacher;
+    private ArrayList<Corso> course;
 
 
-    public Imparte(Docente docente, Corso course,String attiva) {
-        this.docente=docente;
+    public Imparte(Docente docente, ArrayList<Corso> course) {
+        this.teacher=docente;
         this.course = course;
-        this.attiva= attiva;
     }
 
 
-    public String getName() {
-        return docente.getName();
+    public Docente getTeacher(){
+        return teacher;
     }
 
-    public String getSurname() {
-        return docente.getSurname();
-    }
-
-    public Corso getCourse() {
+    public ArrayList<Corso> getCourse() {
         return course;
     }
 
-    public String getAttiva() {
-        return attiva;
+    public void addCourse(Corso c){
+        course.add(c);
     }
+
+
 }

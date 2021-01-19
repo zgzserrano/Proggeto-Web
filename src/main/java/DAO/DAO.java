@@ -1,4 +1,4 @@
-package dao;
+package DAO;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
@@ -353,7 +353,7 @@ public class DAO {
         return achieved;
 
     }
-    public static boolean create(Imparte a){
+    public static boolean create(Associazione a){
         Connection conn1 = null;
         boolean created = false;
         try{
@@ -390,7 +390,7 @@ public class DAO {
         }
         return created;
     }
-    public static Boolean eliminate(Imparte a){
+    public static Boolean eliminate(Associazione a){
         Connection conn1 = null;
         boolean deleted = false;
         try{
@@ -546,24 +546,39 @@ public class DAO {
         return lista;
 
     }
-    public static ArrayList<Imparte> mostrareImpa(){
+    public static ArrayList<Imparte> showImpart(){
         Connection conn1 = null;
         ArrayList<Imparte> lista = new ArrayList<Imparte>();
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from deleteassociazone");
+                System.out.println("Connected to database from showImport");
             }
             Statement st = conn1.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Imparte WHERE attiva=1;");
+            ResultSet rs = st.executeQuery("SELECT * FROM Docente WHERE attiva=1;");
             while(rs.next()) {
 
-                Docente docente= new Docente(rs.getString("nome"),rs.getString("cognome"));
-                Corso corso= new Corso(rs.getString("corso"));
-                String activity= rs.getString("stato");
+                Docente teacher= new Docente(rs.getString("nome"),rs.getString("cognome"));
+                Statement s1=conn1.createStatement();
+                Statement s2=conn1.createStatement();
 
-                Imparte imparte= new Imparte(docente,corso,activity);
-                lista.add(imparte);
+                ResultSet r=s1.executeQuery("select corso from Imparte where nome='"+rs.getString("nome")+"' and cognome='"+rs.getString("cognome")+"' and attiva=1");
+                ResultSet s=s2.executeQuery("select COUNT(*) from Imparte where nome='"+rs.getString("nome")+"' and cognome='"+rs.getString("cognome")+"' and attiva=1");
+
+                ArrayList<Corso> courses= new ArrayList<Corso>();
+                int n=0;
+                if(s.next()) {
+                    n = s.getInt("COUNT(*)");
+
+                    while (r.next()) {
+                        Corso c = new Corso(r.getString("corso"));
+                        courses.add(c);
+                    }
+                    if (n != 0) {
+                        Imparte i = new Imparte(teacher, courses);
+                        lista.add(i);
+                    }
+                }
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -598,14 +613,15 @@ public class DAO {
                 rs2.next();
                 int resul= rs2.getInt("COUNT(*)");
                 if(resul==0){
+                    ArrayList<Corso> c=new ArrayList<Corso>();
                     rs2=s2.executeQuery("SELECT corso from Imparte where nome='" + docente.getName()+"' and cognome='"+ docente.getSurname()+"' and attiva=1;");
                     boolean exist = false;
                     while(rs2.next()) {
-
                         Corso corso = new Corso(rs2.getString("corso"));
+                        c.add(corso);
                         exist = true;
                         if (exist) {
-                            Imparte imparte = new Imparte(docente, corso,"ATTIVA");
+                            Imparte imparte = new Imparte(docente, c);
                             lista.add(imparte);
                         }
                     }
