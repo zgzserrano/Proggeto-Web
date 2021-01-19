@@ -1,4 +1,4 @@
-package DAO;
+package dao;
 
 public class Utente {
     private String account;
@@ -11,7 +11,6 @@ public class Utente {
         this.password = password;
         this.admin = admin;
     }
-
 
     public String getAccount() {
         return account;
@@ -28,5 +27,8 @@ public class Utente {
     @Override
     public String toString() {
         return account + " " + password;
+    }
+    public Utente(String account){  //to show arrays where we dont know the password or if its an admin
+        this.account=account;
     }
 }

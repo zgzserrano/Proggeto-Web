@@ -1,4 +1,4 @@
-package DAO;
+package dao;
 
 public class Docente {
     private String name;
