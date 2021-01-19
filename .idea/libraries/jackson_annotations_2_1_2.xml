@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="jackson-annotations-2.1.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/jackson-annotations-2.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/jackson-core-2.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/jackson-databind-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/javax.json-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/json-rpc-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/json-taglib-0.4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../JACKSON library/javax.json-api-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
