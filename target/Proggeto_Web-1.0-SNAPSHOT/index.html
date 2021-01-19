@@ -10,7 +10,7 @@
 </head>
 <body>
 
-    <div id="pagWeb" onload="funcionQueEligamos">
+    <div id="pagWeb" onload="getCells()">
         <header>
             <h1 id="titleWeb">Sistema di prenotazioni di ripetizioni online</h1>
             <div v-if="!showLogin" id="logout">
@@ -36,6 +36,14 @@
         </header>
 
     <!-- Hay que poner las opciones de si ya esta registrado -->
+        <nav v-if="!showLogin" class="navbar navbar-expand-lg navbar-dark bg-dar">
+            <div id="navbar">
+                <span class="navbar-brand mb-0 h2"><button v-on:click="hider(); tableShow = true">Prenrotare</button></span>
+                <span class="navbar-brand mb-0 h2" v-if="!admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
+                <span class="navbar-brand mb-0 h2" v-if="admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
+                <span class="navbar-brand mb-0 h2" v-if="admin" ><button v-on:click="hider(); impos = true">Impostazioni</button></span>
+            </div>
+        </nav>
 
         <div id="tableShow" v-if="tableShow">
             <h3 class="DispPrenotazione"> Prenotazioni disponibili.</h3>
@@ -56,7 +64,7 @@
                     <td v-for="j in 5">
                         <div v-for="k in (cells[(i-1)*5 +j-1]).free">
                             <h4>{{k.d.name}} {{k.d.surname}}</h4>
-                            <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckPrenotazione(days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9,v.title)"> </div>
+                            <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9,v.title)"> </div>
                         </div>
                     </td>
                 </tr>
@@ -66,6 +74,90 @@
             <p> <button v-if="!showLogin" v-on:click="reserve" class="btn btn-success" >  PRENOTARE </button> </p>
         </div>
 
+        <aside id="navbar-example3" class="navbar navbar-light bg-light" v-if="showPrenotazioneList">
+            <a class="navbar-brand" href="#myReserves"> Prenotazioni</a>
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="#active">Attiviti</a>
+                <a class="nav-link" href="#done">Effettuati</a>
+                <a class="nav-link" href="#disactive">Disdeti</a>
+            </nav>
+        </aside>
+
+        <div  data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="showPrenotazioneList" id="myReserves">
+            <h2 v-if="!admin"> I miei prenotazioni </h2>
+            <h2 v-if="admin"> Tutti i prenotazioni </h2>
+            <h3 id="active" class="tittleTable">Attivi:</h3>
+            <div v-if="returnActives.length===0" class="alert alert-warning">Non c'è nessuna prenotazione attiva.</div>
+            <table v-if="returnActives.length!==0" class="table">
+                <tr>
+                    <th v-if="admin" scope="col">Utente</th>
+                    <th scope="col" >Ora</th>
+                    <th scope="col">Giorno</th>
+                    <th scope="col">Cognome</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Corso</th>
+                    <th v-if="!admin" scope="col">Effettuare</th>
+                    <th scope="col">Disdire</th>
+                </tr>
+                <tr v-for="p in attivi">
+                    <td v-if="admin" >{{p.u.user}}</td>
+                    <td>{{p.hour}}</td>
+                    <td>{{p.day}}</td>
+                    <td>{{p.d.surname}}</td>
+                    <td>{{p.d.name}}</td>
+                    <td>{{p.c.title}}</td>
+                    <td v-if="!admin"><button v-on:click="make(p)" class="btn btn-warning">EFF</button></td>
+                    <td><button v-on:click="cancel(p)" class="btn btn-danger">X</button></td>
+                </tr>
+            </table>
+
+            <h3 id="done" class="tittleTable">Effettuati:</h3>
+            <div v-if="returnDones.length===0" class="alert alert-warning">Non c'è nessuna prenotazione effettuata.</div>
+            <table v-if="returnDones.length!==0" class="table">
+                <tr>
+                    <th v-if="admin" scope="col">Utente</th>
+                    <th scope="col">Ora</th>
+                    <th scope="col">Giorno</th>
+                    <th scope="col">Cognome</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Corso</th>
+                    <th scope="col">Disdire</th>
+                </tr>
+                <tr v-for="p in effettuati">
+                    <td v-if="admin">{{p.u.user}}</td>
+                    <td>{{p.hour}}</td>
+                    <td>{{p.day}}</td>
+                    <td>{{p.d.surname}}</td>
+                    <td>{{p.d.name}}</td>
+                    <td>{{p.c.title}}</td>
+                    <td><button v-on:click="cancel(p)" class="btn btn-danger">X</button></td>
+                </tr>
+            </table>
+
+            <h3 id="disactive" class="tittleTable">Disdeti:</h3>
+            <div v-if="returnCancels.length===0" class="alert alert-warning">Non c'è nessuna prenotazione disdeta.</div>
+            <table v-if="returnCancels.length!==0" class="table">
+                <tr>
+                    <th v-if="admin" scope="col">Utente</th>
+                    <th scope="col">Ora</th>
+                    <th scope="col">Giorno</th>
+                    <th scope="col">Cognome</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Corso</th>
+                </tr>
+                <tr v-for="p in disdeti">
+                    <td v-if="admin">{{p.u.user}}</td>
+                    <td>{{p.hour}}</td>
+                    <td>{{p.day}}</td>
+                    <td>{{p.d.surname}}</td>
+                    <td>{{p.d.name}}</td>
+                    <td>{{p.c.title}}</td>
+                </tr>
+            </table>
+
+        </div>
+
+
 
     </div>
 
@@ -74,7 +166,7 @@
             el:'#pagWeb',
             data: {
                 account : '',
-                showLogin : false,
+                showLogin : true,
                 loginFail : false,
                 link: 'hello-servlet',
                 tableShow: true,
@@ -84,25 +176,234 @@
                 cells: [],
                 course:'',
                 hours:[15,16,17,18],
-                days: ["LUNEDI","MARTEDI","MERCOLEDI","GIOVEDI","VENERDI"]
+                days: ["LUNEDI","MARTEDI","MERCOLEDI","GIOVEDI","VENERDI"],
+                associationList: [],
+                courseList: [],
+                teacherList: [],
+                reserveList: [],
+                showPrenotazioneList: false,
+                impos: false,
+ora
+
             },
 
-            tryLogin:function(){
+            comnputed:{
+                returnActives:function (){
+                    return this.reserveList.filter(function (item){
+                        return  item.state == "ATTIVA";
+                    })
+                },
+                returnDones: function() {
+                    return this.reserveList.filter(function(item) {
+                        return item.state == "EFFETTUATA";
+                    })
+                },
+                returnCancels: function() {
+                    return this.reserveList.filter(function(item) {
+                        return item.state == "CANCELLATA";
+                    })
+                }
+            },
+
+        methods:{
+            tryLogin:function () {
                 var self = this;
-                $.post(this.link, {action: "connection", utente: this.account, password: this.pass}, function(data) {  //Dudas sobre azione y utente
+                $.post(this.link, {action: "connection", user: this.account, password: this.pass}, function (data) {
                     self.setPage(data); //Crear setPage
                 });
-            },
-            logout:function (){
+            }
+        ,
+            logout:function () {
                 var self = this;
-                $.post(this.link, {action:"logout"}, function (data){})
+                $.post(this.link, {action: "logout"}, function (data) {
+                })
                 alert("Ciao " + self.account);
                 console.log(self.account + " is logout");
                 location.reload();
+            },
+
+            reserve:function (){
+                var self = this;
+                var reserv = [];
+                if (self.checked.length > 0){
+                    for (var c of self.checked){
+                        var stringe = c.split("9");
+                        var doc = {name: stringe[2], surname: stringe[3]};
+                        var utente = {user: self.account, pass: self.pass, admin: self.admin};
+                        var corso = {titulo: stringe[4]};
+                        var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
+                        reserv.push(p);
+                        self.reserveList.push(p);
+                    }
+                    $.post(this.link, {action: "reserve", reserve: JSON.stringify(reserv)}, function () {
+                        self.getCells();
+                        self.checked = [];
+                    }, "text");
+                }
+            },
+
+            setPage:function(typeOfUser){
+                var self = this;
+                switch (typeOfUser){
+                    case "notAdmin":
+                        self.admin = false;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        self.getReserves();
+                        self.getCells();
+                        break;
+                    case "admin":
+                        self.getTeachers();
+                        self.getCourses();
+                        self.getReserves();
+                        self.getAssociations();
+                        self.getCells();
+                        self.admin = true;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        break;
+                    case "fail":
+                        self.loginFail = true;
+                        break;
+
+                }
+            },
+
+            getCells:function (){
+                var self = this;
+                $.post(this.link, {action: "freeHour", user:this.account}, function (data){
+                    self.cells = data;
+                });
+                var newCells = [];
+                for (var o of self.hours){
+                    for (var g of self.days){
+                        newCells.push(self.inCell(g,o));
+                    }
+                }
+                self.cells = newCells;
+            },
+
+            inCell:function (g,o){
+                return this.cells.filter(function (item){
+                    return item.day === g && item.hour ===o;
+                });
+            },
+
+            getReserves: function (){
+                var self = this;
+                $.post(this.link, { action: "reserveList", user: this.account}, function (data){
+                    self.reserveList = data;
+                });
+            },
+
+            getTeachers:function() {
+                var self = this;
+                $.post(this.link, {action: "teacherList", user: this.account}, function (data) {
+                    self.teacherList = data;
+                });
+            },
+            getCourses:function() {
+                var self = this;
+                $.post(this.link, {action: "courseList", user: this.account}, function (data) {
+                    self.courseList = data;
+                });
+            },
+            getAssociations:function() {
+                var self = this;
+                $.post(this.link, {action: "associationList", user: this.account}, function (data) {
+                    self.associationList = data;
+                });
+            },
+
+            CheckReserve:function (s, tittle){
+                var self = this;
+                var insert = true;
+                var id = s+ tittle;
+                var exists = false;
+                var hasOther = false;
+                var i = 0;
+
+                if (self.checked.length > 0){
+                    while (!exists && !hasOther && i < self.checked.length){
+                        exists = self.checked[i] === id;
+                        hasOther = self.checked[i].startsWith(s);
+                        i++;
+                    }
+
+                    insert = !exists && !hasOther;
+                }
+
+                if(insert){
+                    self.checked.push(id);
+                }else {
+                    document.getElementById(id)
+                    if (!exists){
+                        alert("Non si puo scegliere.")
+                    } else{
+                        self.checked.splice(i-1, 1)
+                    }
+                }
+            },
+
+            hider:function (){
+                var self = this;
+                self.tableShow = false;
+                self.showPrenotazioneList = false;
+                self.impos = false;
+            },
+
+            make:function (p){
+                var self = this;
+                var response = confirm("Sei securo di volerlo fare?");
+                if (response){
+                    $.post(this.link, {action: "make", reserve: JSON.stringify(p)}, function (){
+                        self.getCells();
+                    }, "text");
+                p.state = "EFFETTUATA";
+                alert("Prenotazione effetuata");
+                }
+            },
+            cancel:function (p){
+                var self = this;
+                var response = confirm("Sei securo di volerlo disdire?");
+                if (response){
+                    var made = (p.state === "EFFETTUATA");
+                    $.post(this.link, {action: "cancel", pre: JSON.stringify(p)},function(){
+                        if (!made) {
+                            self.getCells();
+                        }
+                    }, "text");
+                    p.state = "CANCELLATA";
+                    alert("Prenotazione disdetta");
+                }
+            },
+
+            started:function (){
+              var self = this;
+              $.post(this.link, {action: "justLogin"}, function (data){
+                  if (data !== "fail") {
+                      self.account = data.user;
+                      self.pass = data.pass;
+                      if (data.admin) {
+                          self.setPage("admin");
+                      } else {
+                          self.setPage("notAdmin");
+                      }
+                  } else {
+                      self.setPage("fail");
+                  }
+              });
+            },
+
+            mounted(){
+                this.getCells();
+                this.started();
             }
 
 
 
+
+        }
         })
     </script>
 

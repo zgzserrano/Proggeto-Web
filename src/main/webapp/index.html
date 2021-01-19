@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
     <meta http-equiv="Cache-Control" content="no-store" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
@@ -166,8 +167,8 @@
             el:'#pagWeb',
             data: {
                 account : '',
-                showLogin : false,
-                loginFail : true,
+                showLogin : true,
+                loginFail : false,
                 link: 'hello-servlet',
                 tableShow: true,
                 name:'',
@@ -376,7 +377,31 @@ ora
                     p.state = "CANCELLATA";
                     alert("Prenotazione disdetta");
                 }
+            },
+
+            started:function (){
+              var self = this;
+              $.post(this.link, {action: "justLogin"}, function (data){
+                  if (data !== "fail") {
+                      self.account = data.user;
+                      self.pass = data.pass;
+                      if (data.admin) {
+                          self.setPage("admin");
+                      } else {
+                          self.setPage("notAdmin");
+                      }
+                  } else {
+                      self.setPage("fail");
+                  }
+              });
+            },
+
+            mounted(){
+                this.getCells();
+                this.started();
             }
+
+
 
 
         }
