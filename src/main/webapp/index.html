@@ -369,7 +369,7 @@ ora
                 var response = confirm("Sei securo di volerlo disdire?");
                 if (response){
                     var made = (p.state === "EFFETTUATA");
-                    $.post(this.link, {action: "cancel", pre: JSON.stringify(p)},function(){
+                    $.post(this.link, {action: "cancel", reserve: JSON.stringify(p)},function(){
                         if (!made) {
                             self.getCells();
                         }
