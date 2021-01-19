@@ -1,14 +1,14 @@
-package DAO;
+package dao;
 
 public class Prenotazione {
     private int hour;
     private String day;
-    private String teacher;
-    private String course;
-    private String  user;
+    private Docente teacher;
+    private Corso course;
+    private Utente user;
     private String state;
 
-    Prenotazione(int h, String d, String t, String c, String u, String s){
+    Prenotazione(int h, String d, Docente t, Corso c, Utente u, String s){
         this.hour = h;
         this.day = d;
         this.teacher = t;
@@ -17,11 +17,11 @@ public class Prenotazione {
         this.state = s;
     }
 
-    public String getCourse() {
+    public Corso getCourse() {
         return course;
     }
 
-    public String getTeacher() {
+    public Docente getTeacher() {
         return teacher;
     }
 
@@ -37,7 +37,7 @@ public class Prenotazione {
         return state;
     }
 
-    public String getUser() {
+    public Utente getUser() {
         return user;
     }
 

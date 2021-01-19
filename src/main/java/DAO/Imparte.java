@@ -1,37 +1,31 @@
-package DAO;
+package dao;
 
 public class Imparte {
-    private String name;
-    private String surname;
-    private String course;
-    private boolean attiva;
+    private Docente docente;
+    private Corso course;
+    private String attiva;
 
 
-    public Imparte(String name, String surname, String course,boolean attiva) {
-        this.name = name;
-        this.surname = surname;
+    public Imparte(Docente docente, Corso course,String attiva) {
+        this.docente=docente;
         this.course = course;
+        this.attiva= attiva;
     }
 
 
     public String getName() {
-        return name;
+        return docente.getName();
     }
 
     public String getSurname() {
-        return surname;
+        return docente.getSurname();
     }
 
-    public String getCourse() {
+    public Corso getCourse() {
         return course;
     }
 
-    public boolean getAttiva() {
+    public String getAttiva() {
         return attiva;
-    }
-
-    @Override
-    public String toString() {
-        return name + " " + surname + " " + course;
     }
 }
