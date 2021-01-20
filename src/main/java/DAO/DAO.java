@@ -1,9 +1,7 @@
 package DAO;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Queue;
 
 
 public class DAO {
@@ -11,12 +9,12 @@ public class DAO {
     private static final String user = "root";
     private static final String password = "";
 
-    public  static void registerDriver(){
+    public static void registerDriver() {
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            System.out.println("Driver correctamente registrato");
+            System.out.println("Driver correttamente registrato");
         } catch (SQLException e) {
-            System.out.println("errore " + e.getMessage());
+            System.out.println("Errore: " + e.getMessage());
         }
     }
 

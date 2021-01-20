@@ -17,20 +17,12 @@ import static DAO.DAO.*;
 public class HelloServlet extends HttpServlet {
     private String message;
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        registerDriver();
-    }
 
-    public void destroy() {
-    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);
     }
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);
     }
@@ -46,6 +38,7 @@ public class HelloServlet extends HttpServlet {
             if(func.equals("connection")){
                 String account = req.getParameter("user");
                 String pass = req.getParameter("password");
+                System.out.println("Aqui llega");
                 if (correctPass(account, pass)){
                     if(account!=null && pass != null){
                         session.setAttribute("account", account);
@@ -204,5 +197,17 @@ public class HelloServlet extends HttpServlet {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void init() throws ServletException {
+        System.out.println("Juan eres un mierdas");
+        super.init();
+        registerDriver();
+        System.out.println("Juan eres un ");
+
+    }
+
+    public void destroy() {
     }
 }

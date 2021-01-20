@@ -87,7 +87,7 @@
         <div  data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="showPrenotazioneList" id="myReserves">
             <h2 v-if="!admin"> I miei prenotazioni </h2>
             <h2 v-if="admin"> Tutti i prenotazioni </h2>
-            <h3 id="active" class="tittleTable">Attivi:</h3>
+            <h3 id="active" class="titleTable">Attivi:</h3>
             <div v-if="returnActives.length===0" class="alert alert-warning">Non c'è nessuna prenotazione attiva.</div>
             <table v-if="returnActives.length!==0" class="table">
                 <tr>
@@ -112,7 +112,7 @@
                 </tr>
             </table>
 
-            <h3 id="done" class="tittleTable">Effettuati:</h3>
+            <h3 id="done" class="titleTable">Effettuati:</h3>
             <div v-if="returnDones.length===0" class="alert alert-warning">Non c'è nessuna prenotazione effettuata.</div>
             <table v-if="returnDones.length!==0" class="table">
                 <tr>
@@ -135,7 +135,7 @@
                 </tr>
             </table>
 
-            <h3 id="disactive" class="tittleTable">Disdeti:</h3>
+            <h3 id="disactive" class="titleTable">Disdeti:</h3>
             <div v-if="returnCancels.length===0" class="alert alert-warning">Non c'è nessuna prenotazione disdeta.</div>
             <table v-if="returnCancels.length!==0" class="table">
                 <tr>
@@ -172,7 +172,7 @@
 
         <div data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="impos" id="#myReserves">
             <h2>Impostazioni</h2>
-            <h3 id="idoc" class="littleTable">Inserire docente:</h3>
+            <h3 id="idoc" class="titleTable">Inserire docente:</h3>
             <div  class="field">
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
@@ -198,7 +198,7 @@
 
         <p class="but"><button v-on:click="addDoc" class="btn btn-light">Submit</button></p>
 
-        <h3 id="ldoc" class="tittleTable">Elenco di docenti:</h3>
+        <h3 id="ldoc" class="titleTable">Elenco di docenti:</h3>
         <div v-if="teacherList.length===0" class="alert alert-warning">Non c'è nessun docente registrato.</div>
 
         <table v-if="teacherList.length!==0" class="table">
@@ -214,20 +214,20 @@
             </tr>
         </table>
 
-        <h3 id="icor" class="tittleTable">Inserire corso:</h3>
+        <h3 id="icor" class="titleTable">Inserire corso:</h3>
         <div class="field">
             <div class="input-group input-group-sm mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Corso: </span>
                 </div>
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  v-model="course" required>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  v-model="title" required>
             </div>
         </div>
 
         <label  v-if="errorCourse" class="alert alert-danger"> Campo vuoto </label>
-        <p class="but"><button v-on:click="addCor" class="btn btn-light" id="bttCorso">Submit</button></p>
+        <p class="but"><button v-on:click="addCourse" class="btn btn-light" id="bttCorso">Submit</button></p>
 
-        <h3 id="lcor" class="tittleTable">Elenco di corsi:</h3>
+        <h3 id="lcor" class="titleTable">Elenco di corsi:</h3>
         <div v-if="courseList.length===0" class="alert alert-warning">Non c'è nessun corso registrato.</div>
         <table v-if="courseList.length!==0" class="table">
             <tr>
@@ -235,26 +235,26 @@
                 <th scope="col">Rimuoveri</th>
             </tr>
             <tr v-for="c in courseList">
-                <td>{{c.tittle}}</td>
+                <td>{{c.title}}</td>
                 <td><button v-on:click="removeCourse(c)" class="btn btn-danger">X</button></td>
             </tr>
         </table>
 
-        <h3 id="iass" class="tittleTable">Nuova associazione:</h3>
+        <h3 id="iass" class="titleTable">Nuova associazione:</h3>
         <p>
             <select v-model="teacherSelect">
                 <option v-for="d in teacherList" :value="d">{{d.surname}} {{d.name}}</option>
             </select>
 
             <select v-model="courseSelect">
-                <option v-for="c in courseList" :value="c">{{c.tittle}}</option>
+                <option v-for="c in courseList" :value="c">{{c.title}}</option>
             </select>
         </p>
 
         <p v-if="errorAso" class="alert alert-danger">Inserire tutti i campi</p>
         <p><button v-on:click="addAso(teacherSelect,courseSelect)" class="btn btn-light">Submit</button></p>
 
-        <h3 id="lass" class="tittleTable">Elenco di associazioni:</h3>
+        <h3 id="lass" class="titleTable">Elenco di associazioni:</h3>
         <div v-if="associationList.length===0" class="alert alert-warning">Non c'è nessuna associazione registrata.</div>
 
         <div v-for="a in associationList">
@@ -270,7 +270,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="c in a.course">
-                    <td>{{c.tittle}}</td>
+                    <td>{{c.title}}</td>
                     <td><button v-on:click="removeAso(a.d,c)" class="btn btn-danger">X</button></td>
                 </tr>
                 </tbody>
@@ -294,21 +294,23 @@
             el:'#pagWeb',
             data: {
                 account : '',
+                pass : '',
                 errorCourse: false,
                 errorTeachName: false,
                 errorTeachSurname: false,
                 errorAso: false,
                 showLogin : true,
                 loginFail : false,
+                admin: false,
                 link: 'hello-servlet',
                 tableShow: true,
                 teacherSelect: '',
                 courseSelect: '',
                 name:'',
                 surname:'',
-                title:'',
-                cells: [],
                 course:'',
+                cells: [],
+                checked: [],
                 hours:[15,16,17,18],
                 days: ["LUNEDI","MARTEDI","MERCOLEDI","GIOVEDI","VENERDI"],
                 associationList: [],
@@ -317,7 +319,7 @@
                 reserveList: [],
                 showPrenotazioneList: false,
                 impos: false,
-ora
+                title:''
 
             },
 
@@ -340,6 +342,34 @@ ora
             },
 
         methods:{
+
+            setPage:function(typeOfUser){
+                var self = this;
+                switch (typeOfUser){
+                    case "notAdmin":
+                        self.admin = false;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        self.getReserves();
+                        self.getCells();
+                        break;
+                    case "ad":
+                        self.getTeachers();
+                        self.getCourses();
+                        self.getReserves();
+                        self.getAssociations();
+                        self.getCells();
+                        self.admin = true;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        break;
+                    case "fail":
+                        self.loginFail = true;
+                        break;
+
+                }
+            },
+
             tryLogin:function () {
                 var self = this;
                 $.post(this.link, {action: "connection", user: this.account, password: this.pass}, function (data) {
@@ -364,7 +394,7 @@ ora
                         var stringe = c.split("9");
                         var doc = {name: stringe[2], surname: stringe[3]};
                         var utente = {user: self.account, pass: self.pass, admin: self.admin};
-                        var corso = {tittle: stringe[4]};
+                        var corso = {title: stringe[4]};
                         var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
                         reserv.push(p);
                         self.reserveList.push(p);
@@ -376,32 +406,7 @@ ora
                 }
             },
 
-            setPage:function(typeOfUser){
-                var self = this;
-                switch (typeOfUser){
-                    case "notAdmin":
-                        self.admin = false;
-                        self.loginFail = false;
-                        self.showLogin = false;
-                        self.getReserves();
-                        self.getCells();
-                        break;
-                    case "admin":
-                        self.getTeachers();
-                        self.getCourses();
-                        self.getReserves();
-                        self.getAssociations();
-                        self.getCells();
-                        self.admin = true;
-                        self.loginFail = false;
-                        self.showLogin = false;
-                        break;
-                    case "fail":
-                        self.loginFail = true;
-                        break;
 
-                }
-            },
 
             getCells:function (){
                 var self = this;
@@ -449,10 +454,10 @@ ora
                 });
             },
 
-            CheckReserve:function (s, tittle){
+            CheckReserve:function (s, title){
                 var self = this;
                 var insert = true;
-                var id = s+ tittle;
+                var id = s+ title;
                 var exists = false;
                 var hasOther = false;
                 var i = 0;
@@ -519,7 +524,7 @@ ora
                       self.account = data.user;
                       self.pass = data.pass;
                       if (data.admin) {
-                          self.setPage("admin");
+                          self.setPage("ad");
                       } else {
                           self.setPage("notAdmin");
                       }
@@ -561,7 +566,7 @@ ora
 
             removeCourse:function(c){
                 var self = this;
-                var response = confirm("Sei securo di rimovere il corso '" + c.tittle + "'?");
+                var response = confirm("Sei securo di rimovere il corso '" + c.title + "'?");
                 if (response) {
                     $.post(this.link, {action: "removeCourse", course: JSON.stringify(c)} , function(data) {
                         alert( c.title +" ha stato rimosso.");
@@ -604,7 +609,7 @@ ora
                 }
             },
 
-            addDoc:function(){
+            addDoc:function() {
                 var self = this;
                 self.errorTeachName = (this.name === "");
                 self.errorTeachSurname = (this.surname === "");
@@ -615,25 +620,20 @@ ora
                             var d = {name: self.name, surname: self.surname};
                             self.teacherList.push(d);//JSON.parse(c));
                         } else {
-                            alert(self.name + " " + self.surname +  " è già registrato.");
+                            alert(self.name + " " + self.surname + " è già registrato.");
                         }
                         self.name = '';
                         self.surname = '';
                     });
                 }
-
-            },
-
-            mounted(){
-                this.getCells();
-                this.started();
+            }
+        },
+        mounted(){
+            this.getCells();
+            this.started();
             }
 
-
-
-
-        }
-        })
+        });
     </script>
 
 </body>
