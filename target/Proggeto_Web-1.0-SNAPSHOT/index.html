@@ -158,19 +158,152 @@
 
         </div>
 
+        <aside id="navbar-example3" class="navbar navbar-light bg-light" v-if="impos">
+            <a class="navbar-brand" href="#myReserves">Impostazioni</a>
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="#idoc">Inserire docente</a>
+                <a class="nav-link" href="#ldoc">Elenco di docenti</a>
+                <a class="nav-link" href="#icor">Inserire corso</a>
+                <a class="nav-link" href="#lcor">Elenco di corsi</a>
+                <a class="nav-link" href="#iass">Nuova associazione</a>
+                <a class="nav-link" href="#lass">Elenco di associazioni</a>
+            </nav>
+        </aside>
 
+        <div data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="impos" id="#myReserves">
+            <h2>Impostazioni</h2>
+            <h3 id="idoc" class="littleTable">Inserire docente:</h3>
+            <div  class="field">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Nome:  </span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" v-model="name" required>
+                </div>
+            </div>
+        </div>
+
+        <label  v-if="errorTeachName" class="alert alert-danger"> Campo vuoto </label>
+        <div  class="field">
+            <div class="input-group input-group-sm mb-3" class="campo">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Cognome:  </span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" v-model="surname" required>
+                <br>
+            </div>
+        </div>
+
+        <p><label  v-if="errorTeachCognome" class="alert alert-danger"> Campo vuoto </label></p>
+
+        <p class="but"><button v-on:click="addDoc" class="btn btn-light">Submit</button></p>
+
+        <h3 id="ldoc" class="tittleTable">Elenco di docenti:</h3>
+        <div v-if="teacherList.length===0" class="alert alert-warning">Non c'è nessun docente registrato.</div>
+
+        <table v-if="teacherList.length!==0" class="table">
+            <tr>
+                <th scope="col">Cognome</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Rimuoveri</th>
+            </tr>
+            <tr v-for="d in teacherList">
+                <td>{{d.surname}}</td>
+                <td>{{d.name}}</td>
+                <td><button v-on:click="removeDoc(d)" class="btn btn-danger">X</button></td>
+            </tr>
+        </table>
+
+        <h3 id="icor" class="tittleTable">Inserire corso:</h3>
+        <div class="field">
+            <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Corso: </span>
+                </div>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  v-model="course" required>
+            </div>
+        </div>
+
+        <label  v-if="errorCourse" class="alert alert-danger"> Campo vuoto </label>
+        <p class="but"><button v-on:click="addCor" class="btn btn-light" id="bttCorso">Submit</button></p>
+
+        <h3 id="lcor" class="tittleTable">Elenco di corsi:</h3>
+        <div v-if="courseList.length===0" class="alert alert-warning">Non c'è nessun corso registrato.</div>
+        <table v-if="courseList.length!==0" class="table">
+            <tr>
+                <th scope="col">Titolo</th>
+                <th scope="col">Rimuoveri</th>
+            </tr>
+            <tr v-for="c in courseList">
+                <td>{{c.tittle}}</td>
+                <td><button v-on:click="removeCor(c)" class="btn btn-danger">X</button></td>
+            </tr>
+        </table>
+
+        <h3 id="iass" class="tittleTable">Nuova associazione:</h3>
+        <p>
+            <select v-model="teacherSelect">
+                <option v-for="d in teacherList" :value="d">{{d.surname}} {{d.name}}</option>
+            </select>
+
+            <select v-model="courseSelect">
+                <option v-for="c in courseList" :value="c">{{c.tittle}}</option>
+            </select>
+        </p>
+
+        <p v-if="errorAso" class="alert alert-danger">Inserire tutti i campi</p>
+        <p><button v-on:click="addAso(teacherSelect,courseSelect)" class="btn btn-light">Submit</button></p>
+
+        <h3 id="lass" class="tittleTable">Elenco di associazioni:</h3>
+        <div v-if="associationList.length===0" class="alert alert-warning">Non c'è nessuna associazione registrata.</div>
+
+        <div v-for="a in associationList">
+            <h4 >
+                {{a.d.surname}}, {{a.d.name}}
+            </h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Corso</th>
+                    <th scope="col">Rimuoveri</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="c in a.course">
+                    <td>{{c.tittle}}</td>
+                    <td><button v-on:click="removeAso(a.d,c)" class="btn btn-danger">X</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     </div>
 
     <script>
+
+        $('div .checkbox').click(function () {
+            checkedState = $(this).attr('checked');
+            $(this).parent('div').children('.checkbox:checked').each(function () {
+                $(this).attr('checked', false);
+            });
+            $(this).attr('checked', checkedState);
+        });
+
         var pagWeb = new Vue({
             el:'#pagWeb',
             data: {
                 account : '',
+                errorCourse: false,
+                errorTeachName: false,
+                errorTeachCognome: false,
+                errorAso: false,
                 showLogin : true,
                 loginFail : false,
                 link: 'hello-servlet',
                 tableShow: true,
+                teacherSelect: '',
+                courseSelect: '',
                 name:'',
                 surname:'',
                 title:'',
