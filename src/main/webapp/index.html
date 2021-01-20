@@ -194,7 +194,7 @@
             </div>
         </div>
 
-        <p><label  v-if="errorTeachCognome" class="alert alert-danger"> Campo vuoto </label></p>
+        <p><label  v-if="errorTeachSurname" class="alert alert-danger"> Campo vuoto </label></p>
 
         <p class="but"><button v-on:click="addDoc" class="btn btn-light">Submit</button></p>
 
@@ -236,7 +236,7 @@
             </tr>
             <tr v-for="c in courseList">
                 <td>{{c.tittle}}</td>
-                <td><button v-on:click="removeCor(c)" class="btn btn-danger">X</button></td>
+                <td><button v-on:click="removeCourse(c)" class="btn btn-danger">X</button></td>
             </tr>
         </table>
 
@@ -296,7 +296,7 @@
                 account : '',
                 errorCourse: false,
                 errorTeachName: false,
-                errorTeachCognome: false,
+                errorTeachSurname: false,
                 errorAso: false,
                 showLogin : true,
                 loginFail : false,
@@ -364,7 +364,7 @@ ora
                         var stringe = c.split("9");
                         var doc = {name: stringe[2], surname: stringe[3]};
                         var utente = {user: self.account, pass: self.pass, admin: self.admin};
-                        var corso = {titulo: stringe[4]};
+                        var corso = {tittle: stringe[4]};
                         var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
                         reserv.push(p);
                         self.reserveList.push(p);
@@ -527,6 +527,101 @@ ora
                       self.setPage("fail");
                   }
               });
+            },
+
+            removeAso:function (t,c){
+                var self = this;
+                var response = confirm("sei securo di volerlo rimovere?");
+                if (response){
+                    $.post(this.link, {action: "removeAso", course: JSON.stringify(c), teacher: JSON.stringify(t)}, function (data){
+                        self.getReserves();
+                        self.getCells();
+                        self.getAssociations();
+                    }, "text");
+                }
+            },
+
+            addAso:function(t,c){
+                var self = this;
+                self.errorAso = !c.hasOwnProperty('title') || !d.hasOwnProperty('name') || !t.hasOwnProperty('surname');
+
+                if (!self.errorAso) {
+                    $.post(this.link, {action: "addAso", course: JSON.stringify(c), teacher: JSON.stringify(t)} , function(data) {
+                        if (data) {
+                            alert("Associazione creata.");
+                            self.getAssociations();
+                            self.getCells();
+                        }else {
+                            alert("Associazione è già registrata.");
+                        }
+                    }, "text");
+
+                }
+            },
+
+            removeCourse:function(c){
+                var self = this;
+                var response = confirm("Sei securo di rimovere il corso '" + c.tittle + "'?");
+                if (response) {
+                    $.post(this.link, {action: "removeCourse", course: JSON.stringify(c)} , function(data) {
+                        alert( c.title +" ha stato rimosso.");
+                        self.elencoCorsi = self.elencoCorsi.filter( el => el !== c );
+                        self.getAssociations();
+                        self.getCells()
+                        self.getReserves()
+                    }, "text");
+                }
+            },
+
+            addCourse:function(){
+                var self = this;
+                self.errorCourse = (this.course === "");
+                if (!self.errorCourse) {
+                    $.post(this.link, {action: "addCourse", course: this.course}, function (data) {
+                        if (data) {
+                            alert("Il corso " + self.course + " ha stato inserito.");
+                            var c = {title: self.course};
+                            self.courseList.push(c);//JSON.parse(c));
+                        } else {
+                            alert("Il corso " + self.course + " è già registrato.");
+                        }
+                        self.course = '';
+                    });
+                }
+            },
+
+            removeDoc:function(d){
+                var self = this;
+                var response = confirm("Sei securo di rimovere il docente '" + d.name + " " + d.surname + "'?");
+                if (response) {
+                    $.post(this.link, {action: "removeDoc", teacher: JSON.stringify(d)}, function () {
+                        alert( d.name  + " "+ d.surname +" ha stato rimosso.");
+                        self.teacherList = self.teacherList.filter( el => el !== d );
+                        self.getAssociations();
+                        self.getReserves();
+                        self.getCells();
+                    }, "text");
+                }
+            },
+
+            addDoc:function(){
+                var self = this;
+                self.errorTeachName = (this.name === "");
+                self.errorTeachSurname = (this.surname === "");
+                if (!self.errorTeachName && !self.errorTeachSurname) {
+                    $.post(this.link, {action: "addDoc", name: this.name, surname: this.surname}, function (data) {
+                        if (data) {
+                            alert(self.name + " " + self.surname + " ha stato inserito.");
+                            var d = {name: self.name, surname: self.surname};
+                            self.teacherList.push(d);//JSON.parse(c));
+                        } else {
+                            alert(self.name + " " + self.surname +  " è già registrato.");
+                        }
+                        self.name = '';
+                        self.surname = '';
+                    });
+                }
+
             },
 
             mounted(){

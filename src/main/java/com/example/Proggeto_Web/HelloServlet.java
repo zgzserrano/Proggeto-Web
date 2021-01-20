@@ -1,5 +1,6 @@
 package com.example.Proggeto_Web;
 
+
 import DAO.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import myBeans.JSONManager;
@@ -16,7 +17,14 @@ import static DAO.DAO.*;
 public class HelloServlet extends HttpServlet {
     private String message;
 
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        registerDriver();
+    }
 
+    public void destroy() {
+    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);
@@ -125,20 +133,76 @@ public class HelloServlet extends HttpServlet {
                 for (Prenotazione p : pre) {
                     reservate(p);
                 }
+
+            }
+            else if (func.equals("addDoc")){
+                String name = req.getParameter("name");
+                String surName = req.getParameter("surName");
+                Docente p = new Docente(name, surName);
+                if (addDocenteToDB(p)) {
+                    out.print("true");
+                }
+                else {
+                    out.print("false");
+                }
+            }
+            else if (func.equals("removeDoc")){
+                Docente p = JSONMan.parseJson(req.getParameter("teacher"), Docente.class);
+                if (deleteDocenteofDB(p)) {
+                    out.print("true");
+                }
+                else {
+                    out.print("false");
+                }
+            }
+            else if (func.equals("addAso")){
+                Docente doc = JSONMan.parseJson(req.getParameter("teacher"), Docente.class);
+                Corso c = JSONMan.parseJson(req.getParameter("course"), Corso.class);
+
+                Associazione p = new Associazione(doc,c);
+                if (create(p)) {
+                    out.print("true");
+                }
+                else {
+                    out.print("false");
+                }
+            }
+            else if (func.equals("removeAso")){
+                Corso c = JSONMan.parseJson(req.getParameter("course"), Corso.class);
+                Docente d = JSONMan.parseJson(req.getParameter("teacher"), Docente.class);
+                Associazione a = new Associazione(d,c);
+                if (eliminate(a)) {
+                    out.print("true");
+                }
+                else {
+                    out.print("false");
+                }
+            }
+            else if (func.equals("addCourse")){
+                String title = req.getParameter("course");
+
+                Corso p = new Corso(title);
+                if (addCoursetoDB(p)) {
+                    out.print("true");
+                }
+                else {
+                    out.print("false");
+                }
+            }
+            else if (func.equals("removeCourse")){
+                Corso p = JSONMan.parseJson(req.getParameter("course"), Corso.class);
+                if (deleteCoursetoDB(p)) {
+                    out.print("true");
+                }
+                else {
+                    out.print("false");
+                }
             }
 
 
 
-            } catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
-    }
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        registerDriver();
-    }
-
-    public void destroy() {
     }
 }
