@@ -21,7 +21,6 @@ public class DAO {
     }
 
     public static boolean correctPass(String username, String pass) {
-
         boolean correct = false;
         //Have to create and initialize before try, else error
         Connection conn1 = null;
@@ -32,7 +31,7 @@ public class DAO {
             }
             Statement st = conn1.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Utente WHERE account='" + username + "' and pass=" + pass + ";");
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Utente WHERE account='" + username + "' and pass='" + pass + "';");
             rs.next();
             correct = rs.getInt("COUNT(*)") > 0;
 
@@ -62,7 +61,7 @@ public class DAO {
             }
             Statement st = conn1.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT * FROM utente WHERE account? '" + username + "';");
+            ResultSet rs = st.executeQuery("SELECT * FROM Utente WHERE account='" + username + "';");
             rs.next();
             role = rs.getBoolean("admin");
         } catch (SQLException e) {
@@ -424,7 +423,7 @@ public class DAO {
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from deleteassociazone");
+                System.out.println("Connected to database from getPrenotazioni");
             }
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Prenotazione ;");
@@ -459,7 +458,7 @@ public class DAO {
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from deleteassociazone");
+                System.out.println("Connected to database from getPrenotazioni");
             }
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Prenotazione  WHERE usuario='" + utente + "';");
@@ -494,7 +493,7 @@ public class DAO {
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from deleteassociazone");
+                System.out.println("Connected to database from mostrareDoc");
             }
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Docente WHERE attiva=1;");
@@ -523,7 +522,7 @@ public class DAO {
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from deleteassociazone");
+                System.out.println("Connected to database from MostrareCor");
             }
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Corso WHERE attiva=1;");
@@ -600,7 +599,7 @@ public class DAO {
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from deleteassociazone");
+                System.out.println("Connected to database from gethourfree");
             }
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Docente WHERE attiva=1;");

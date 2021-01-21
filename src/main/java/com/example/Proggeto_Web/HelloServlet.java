@@ -30,7 +30,6 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                 case "connection": {
                     String account = req.getParameter("user");
                     String pass = req.getParameter("password");
-                    System.out.println("Aqui llega");
                     if (correctPass(account, pass)) {
                         if (account != null && pass != null) {
                             session.setAttribute("account", account);
