@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
     <meta http-equiv="Cache-Control" content="no-store" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -323,7 +323,7 @@
 
             },
 
-            comnputed:{
+            computed:{
                 returnActives:function (){
                     return this.reserveList.filter(function (item){
                         return  item.state == "ATTIVA";
@@ -475,7 +475,7 @@
                 if(insert){
                     self.checked.push(id);
                 }else {
-                    document.getElementById(id)
+                    document.getElementById(id).checked = false;
                     if (!exists){
                         alert("Non si puo scegliere.")
                     } else{
