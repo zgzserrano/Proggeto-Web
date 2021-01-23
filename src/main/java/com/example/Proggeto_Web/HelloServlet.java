@@ -2,7 +2,7 @@ package com.example.Proggeto_Web;
 
 
 import DAO.*;
-//import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 import myBeans.JSONManager;
 
 import java.io.*;
@@ -20,7 +20,8 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws  ServletException, IOException{
         //Basis structure
-        HttpSession session= req.getSession();
+        resp.setContentType("application/json");
+        HttpSession session= req.getSession() ;
 
         try {
             PrintWriter out = resp.getWriter();
@@ -30,6 +31,7 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                 case "connection": {
                     String account = req.getParameter("user");
                     String pass = req.getParameter("password");
+                    System.out.println("user name is" + account + pass);
                     if (correctPass(account, pass)) {
                         if (account != null && pass != null) {
                             session.setAttribute("account", account);
@@ -39,7 +41,7 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                         if (getRole(account)) {
                             out.println(JSONMan.serializeJson("ad"));
                         } else {
-                            out.println(JSONMan.serializeJson("notAdmin"));
+                            out.println(JSONMan.serializeJson("a"));
                         }
                     } else {
                         out.println(JSONMan.serializeJson("fail"));
@@ -199,7 +201,7 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        DAO.registerDriver();
+        registerDriver();
     }
 
 }

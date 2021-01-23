@@ -30,7 +30,6 @@ public class DAO {
                 System.out.println("Connected to database for login");
             }
             Statement st = conn1.createStatement();
-
             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Utente WHERE account='" + username + "' and pass='" + pass + "';");
             rs.next();
             correct = rs.getInt("COUNT(*)") > 0;

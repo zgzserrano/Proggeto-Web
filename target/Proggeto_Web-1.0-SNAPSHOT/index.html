@@ -1,37 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Home</title>
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
     <meta http-equiv="Cache-Control" content="no-store" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 <body>
 
     <div id="pagWeb" onload="getCells()">
         <header>
-            <h1 id="titleWeb">Sistema di prenotazioni di ripetizioni online</h1>
+            <!--<h1 id="titleWeb">Sistema di prenotazioni di ripetizioni online</h1>-->
             <div v-if="!showLogin" id="logout">
                 <h3>Benvenuto {{account}}</h3>
                 <button v-on:click="logout" class="btn btn-outline-secondary"> Log Out</button>
             </div>
-            <div v-if="showLogin" id="login">
-                <div class="input-group mb-3">
+            <div v-if="showLogin" id="log">
+                <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">Username</span>
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Username</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" v-model="account" required>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon2">Password</span>
+                        <span class="input-group-text" id="inputGroup-sizing-sm2">Password</span>
                     </div>
-                    <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+                    <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm2" v-model="pass" required>
                 </div>
-                <button v-on:click="tryLogin" class="btn btn-outline-secondary"> Log In</button>
+                <p><button v-on:click="tryLogin" class="btn btn-ligh"> Log In</button></p>
                 <span v-if="loginFail" class="alert alert-danger" > Password o utente sbagliato </span>
             </div>
         </header>
@@ -39,14 +40,14 @@
     <!-- Hay que poner las opciones de si ya esta registrado -->
         <nav v-if="!showLogin" class="navbar navbar-expand-lg navbar-dark bg-dar">
             <div id="navbar">
-                <span class="navbar-brand mb-0 h2"><button v-on:click="hider(); tableShow = true">Prenrotare</button></span>
-                <span class="navbar-brand mb-0 h2" v-if="!admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
-                <span class="navbar-brand mb-0 h2" v-if="admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
-                <span class="navbar-brand mb-0 h2" v-if="admin" ><button v-on:click="hider(); impos = true">Impostazioni</button></span>
+                <span class="navbar-brand mb-0 h1"><button v-on:click="hider(); tableShow = true">Prenotare</button></span>
+                <span class="navbar-brand mb-0 h1" v-if="!admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
+                <span class="navbar-brand mb-0 h1" v-if="admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
+                <span class="navbar-brand mb-0 h1" v-if="admin" ><button v-on:click="hider(); impos = true">Impostazioni</button></span>
             </div>
         </nav>
 
-        <div id="tableShow" v-if="tableShow">
+        <article id="tableShow" v-if="tableShow">
             <h3 class="DispPrenotazione"> Prenotazioni disponibili.</h3>
             <table class="table table-striped">
                 <thead>
@@ -73,12 +74,12 @@
 
             </table>
             <p> <button v-if="!showLogin" v-on:click="reserve" class="btn btn-success" >  PRENOTARE </button> </p>
-        </div>
+        </article>
 
         <aside id="navbar-example3" class="navbar navbar-light bg-light" v-if="showPrenotazioneList">
             <a class="navbar-brand" href="#myReserves"> Prenotazioni</a>
             <nav class="nav nav-pills flex-column">
-                <a class="nav-link" href="#active">Attiviti</a>
+                <a class="nav-link" href="#att">Attiviti</a>
                 <a class="nav-link" href="#done">Effettuati</a>
                 <a class="nav-link" href="#disactive">Disdeti</a>
             </nav>
@@ -87,7 +88,7 @@
         <div  data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="showPrenotazioneList" id="myReserves">
             <h2 v-if="!admin"> I miei prenotazioni </h2>
             <h2 v-if="admin"> Tutti i prenotazioni </h2>
-            <h3 id="active" class="titleTable">Attivi:</h3>
+            <h3 id="att" class="titleTable">Attivi:</h3>
             <div v-if="returnActives.length===0" class="alert alert-warning">Non c'è nessuna prenotazione attiva.</div>
             <table v-if="returnActives.length!==0" class="table">
                 <tr>
@@ -181,11 +182,10 @@
                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" v-model="name" required>
                 </div>
             </div>
-        </div>
 
-        <label  v-if="errorTeachName" class="alert alert-danger"> Campo vuoto </label>
-        <div  class="field">
-            <div class="input-group input-group-sm mb-3" class="campo">
+        <label v-if="errorTeachName" class="alert alert-danger"> Campo vuoto </label>
+        <div class="field">
+            <div class="input-group input-group-sm mb-3" class="field">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Cognome:  </span>
                 </div>
@@ -194,7 +194,7 @@
             </div>
         </div>
 
-        <p><label  v-if="errorTeachSurname" class="alert alert-danger"> Campo vuoto </label></p>
+        <p><label v-if="errorTeachSurname" class="alert alert-danger"> Campo vuoto </label></p>
 
         <p class="but"><button v-on:click="addDoc" class="btn btn-light">Submit</button></p>
 
@@ -217,7 +217,7 @@
         <h3 id="icor" class="titleTable">Inserire corso:</h3>
         <div class="field">
             <div class="input-group input-group-sm mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group-prepenmyReservesd">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Corso: </span>
                 </div>
                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  v-model="title" required>
@@ -258,7 +258,7 @@
         <div v-if="associationList.length===0" class="alert alert-warning">Non c'è nessuna associazione registrata.</div>
 
         <div v-for="a in associationList">
-            <h4 >
+            <h4>
                 {{a.d.surname}}, {{a.d.name}}
             </h4>
             <table class="table">
@@ -277,7 +277,6 @@
             </table>
         </div>
     </div>
-
     </div>
 
     <script>
@@ -290,7 +289,7 @@
             $(this).attr('checked', checkedState);
         });
 
-        var pagWeb = new Vue({
+        var pagWeb = new Vue ({
             el:'#pagWeb',
             data: {
                 account : '',
@@ -343,70 +342,11 @@
 
         methods:{
 
-            setPage:function(typeOfUser){
-                var self = this;
-                switch (typeOfUser){
-                    case "notAdmin":
-                        self.admin = false;
-                        self.loginFail = false;
-                        self.showLogin = false;
-                        self.getReserves();
-                        self.getCells();
-                        break;
-                    case "ad":
-                        self.getTeachers();
-                        self.getCourses();
-                        self.getReserves();
-                        self.getAssociations();
-                        self.getCells();
-                        self.admin = true;
-                        self.loginFail = false;
-                        self.showLogin = false;
-                        break;
-                    case "fail":
-                        self.loginFail = true;
-                        break;
-
-                }
-            },
-
-            tryLogin:function () {
-                var self = this;
-                $.post(this.link, {action: "connection", user: this.account, password: this.pass}, function (data) {
-                    self.setPage(data); //Crear setPage
+            inCell:function (g,o){
+                return this.cells.filter(function (item){
+                    return item.day === g && item.hour ===o;
                 });
-            }
-        ,
-            logout:function () {
-                var self = this;
-                $.post(this.link, {action: "logout"}, function (data) {
-                })
-                alert("Ciao " + self.account);
-                console.log(self.account + " is logout");
-                location.reload();
             },
-
-            reserve:function (){
-                var self = this;
-                var reserv = [];
-                if (self.checked.length > 0){
-                    for (var c of self.checked){
-                        var stringe = c.split("9");
-                        var doc = {name: stringe[2], surname: stringe[3]};
-                        var utente = {user: self.account, pass: self.pass, admin: self.admin};
-                        var corso = {title: stringe[4]};
-                        var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
-                        reserv.push(p);
-                        self.reserveList.push(p);
-                    }
-                    $.post(this.link, {action: "reserve", reserve: JSON.stringify(reserv)}, function () {
-                        self.getCells();
-                        self.checked = [];
-                    }, "text");
-                }
-            },
-
-
 
             getCells:function (){
                 var self = this;
@@ -420,12 +360,6 @@
                     }
                 }
                 self.cells = newCells;
-            },
-
-            inCell:function (g,o){
-                return this.cells.filter(function (item){
-                    return item.day === g && item.hour ===o;
-                });
             },
 
             getReserves: function (){
@@ -447,91 +381,12 @@
                     self.courseList = data;
                 });
             },
+
             getAssociations:function() {
                 var self = this;
                 $.post(this.link, {action: "associationList", user: this.account}, function (data) {
                     self.associationList = data;
                 });
-            },
-
-            CheckReserve:function (s, title){
-                var self = this;
-                var insert = true;
-                var id = s+ title;
-                var exists = false;
-                var hasOther = false;
-                var i = 0;
-
-                if (self.checked.length > 0){
-                    while (!exists && !hasOther && i < self.checked.length){
-                        exists = self.checked[i] === id;
-                        hasOther = self.checked[i].startsWith(s);
-                        i++;
-                    }
-
-                    insert = !exists && !hasOther;
-                }
-
-                if(insert){
-                    self.checked.push(id);
-                }else {
-                    document.getElementById(id).checked = false;
-                    if (!exists){
-                        alert("Non si puo scegliere.")
-                    } else{
-                        self.checked.splice(i-1, 1)
-                    }
-                }
-            },
-
-            hider:function (){
-                var self = this;
-                self.tableShow = false;
-                self.showPrenotazioneList = false;
-                self.impos = false;
-            },
-
-            make:function (p){
-                var self = this;
-                var response = confirm("Sei securo di volerlo fare?");
-                if (response){
-                    $.post(this.link, {action: "make", reserve: JSON.stringify(p)}, function (){
-                        self.getCells();
-                    }, "text");
-                p.state = "EFFETTUATA";
-                alert("Prenotazione effetuata");
-                }
-            },
-            cancel:function (p){
-                var self = this;
-                var response = confirm("Sei securo di volerlo disdire?");
-                if (response){
-                    var made = (p.state === "EFFETTUATA");
-                    $.post(this.link, {action: "cancel", reserve: JSON.stringify(p)},function(){
-                        if (!made) {
-                            self.getCells();
-                        }
-                    }, "text");
-                    p.state = "CANCELLATA";
-                    alert("Prenotazione disdetta");
-                }
-            },
-
-            started:function (){
-              var self = this;
-              $.post(this.link, {action: "justLogin"}, function (data){
-                  if (data !== "fail") {
-                      self.account = data.user;
-                      self.pass = data.pass;
-                      if (data.admin) {
-                          self.setPage("ad");
-                      } else {
-                          self.setPage("notAdmin");
-                      }
-                  } else {
-                      self.setPage("fail");
-                  }
-              });
             },
 
             removeAso:function (t,c){
@@ -548,7 +403,7 @@
 
             addAso:function(t,c){
                 var self = this;
-                self.errorAso = !c.hasOwnProperty('title') || !d.hasOwnProperty('name') || !t.hasOwnProperty('surname');
+                self.errorAso = !c.hasOwnProperty('title') || !t.hasOwnProperty('name') || !t.hasOwnProperty('surname');
 
                 if (!self.errorAso) {
                     $.post(this.link, {action: "addAso", course: JSON.stringify(c), teacher: JSON.stringify(t)} , function(data) {
@@ -570,7 +425,7 @@
                 if (response) {
                     $.post(this.link, {action: "removeCourse", course: JSON.stringify(c)} , function(data) {
                         alert( c.title +" ha stato rimosso.");
-                        self.elencoCorsi = self.elencoCorsi.filter( el => el !== c );
+                        self.courseList = self.courseList.filter( el => el !== c );
                         self.getAssociations();
                         self.getCells()
                         self.getReserves()
@@ -626,13 +481,156 @@
                         self.surname = '';
                     });
                 }
+            },
+
+            hider:function (){
+                var self = this;
+                self.tableShow = false;
+                self.showPrenotazioneList = false;
+                self.impos = false;
+            },
+
+            make:function (p){
+                var self = this;
+                var response = confirm("Sei securo di volerlo fare?");
+                if (response){
+                    $.post(this.link, {action: "make", reserve: JSON.stringify(p)}, function (){
+                        self.getCells();
+                    }, "text");
+                    p.state = "EFFETTUATA";
+                    alert("Prenotazione effetuata");
+                }
+            },
+            cancel:function (p){
+                var self = this;
+                var response = confirm("Sei securo di volerlo disdire?");
+                if (response){
+                    var made = (p.state === "EFFETTUATA");
+                    $.post(this.link, {action: "cancel", reserve: JSON.stringify(p)},function(){
+                        if (!made) {
+                            self.getCells();
+                        }
+                    }, "text");
+                    p.state = "CANCELLATA";
+                    alert("Prenotazione disdetta");
+                }
+            },
+            reserve:function (){
+                var self = this;
+                var reserv = [];
+                if (self.checked.length > 0){
+                    for (var c of self.checked){
+                        var stringe = c.split("9");
+                        var doc = {name: stringe[2], surname: stringe[3]};
+                        var utente = {user: self.account, pass: self.pass, admin: self.admin};
+                        var corso = {title: stringe[4]};
+                        var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
+                        reserv.push(p);
+                        self.reserveList.push(p);
+                    }
+                    $.post(this.link, {action: "reserve", reserve: JSON.stringify(reserv)}, function () {
+                        self.getCells();
+                        self.checked = [];
+                    }, "text");
+                }
+            },
+
+
+
+            CheckReserve:function (s, title){
+                var self = this;
+                var insert = true;
+                var id = s+ title;
+                var exists = false;
+                var hasOther = false;
+                var i = 0;
+
+                if (self.checked.length > 0){
+                    while (!exists && !hasOther && i < self.checked.length){
+                        exists = self.checked[i] === id;
+                        hasOther = self.checked[i].startsWith(s);
+                        i++;
+                    }
+
+                    insert = !exists && !hasOther;
+                }
+
+                if(insert){
+                    self.checked.push(id);
+                }else {
+                    document.getElementById(id).checked = false;
+                    if (!exists){
+                        alert("Non si puo scegliere.")
+                    } else{
+                        self.checked.splice(i-1, 1)
+                    }
+                }
+            },
+
+            setPage:function(typeOfUser){
+                var self = this;
+                switch (typeOfUser){
+                    case "a":
+                        self.admin = false;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        self.getReserves();
+                        self.getCells();
+                        break;
+                    case "ad":
+                        self.getTeachers();
+                        self.getCourses();
+                        self.getReserves();
+                        self.getAssociations();
+                        self.getCells();
+                        self.admin = true;
+                        self.loginFail = false;
+                        self.showLogin = false;
+                        break;
+                    case "fail":
+                        self.loginFail = true;
+                        break;
+
+                }
+            },
+
+            tryLogin:function () {
+                var self = this;
+                $.post(this.link, {action: "connection", user: self.account, password: self.pass}, function (data) {
+                    self.setPage(data);
+                });
+            },
+
+
+            started:function (){
+              var self = this;
+              $.post(this.link, {action: "justLogin"}, function (data){
+                  if (data !== "fail") {
+                      self.account = data.user;
+                      self.pass = data.pass;
+                      if (data.admin) {
+                          self.setPage("ad");
+                      } else {
+                          self.setPage("a");
+                      }
+                  } else {
+                      self.setPage("fail");
+                  }
+              });
+            },
+            logout:function () {
+                var self = this;
+                $.post(this.link, {action: "logout"}, function (data) {
+                })
+                alert("Ciao " + self.account);
+                console.log(self.account + " is logout");
+                location.reload();
             }
         },
         mounted(){
             this.getCells();
             this.started();
             }
-
         });
     </script>
 
