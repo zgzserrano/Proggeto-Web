@@ -88,8 +88,17 @@ public class DAO {
                 System.out.println("Connected to db from addDocenteToDB");
             }
             Statement st = conn1.createStatement();
-            st.executeUpdate("INSERT INTO `Docente` (`nome`, `cognome`, `attiva`) VALUES ('" + d.getName() + "', '" + d.getSurname() + "', '1');" );
-            added = true;
+            ResultSet r= st.executeQuery("select * from Docente where nome='"+d.getName()+"'and cognome='"+d.getSurname()+"';");
+            if(r.next()) {
+                if (!r.getBoolean("attiva")) {
+                    st.executeUpdate("update Docente set attiva=1 where nome='"+d.getName()+"'and cognome='"+d.getSurname()+"' ;");
+                    added = true;
+                }
+            }
+            else{
+                st.executeUpdate("INSERT INTO `Docente` (`nome`, `cognome`, `attiva`) VALUES ('" + d.getName() + "', '" + d.getSurname() + "', '1');");
+                added = true;
+            }
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }finally {
@@ -153,7 +162,7 @@ public class DAO {
                 System.out.println("Connected to db from getReserves");
             }
             Statement st = conn1.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM PRENOTAZIONE where usuairo='" + username + "';" );
+            ResultSet rs = st.executeQuery("SELECT * FROM PRENOTAZIONE where usuario='" + username + "';" );
             while (rs.next()){
                 Utente u = new Utente(rs.getString("usuario"));
                 Docente t = new Docente(rs.getNString("nome"), rs.getString("cognome"));
@@ -190,15 +199,15 @@ public class DAO {
                 System.out.println("Connected to database from addCoursetoDB");
             }
             Statement st = conn1.createStatement();
-            ResultSet rs = st.executeQuery("select * from Corso where titulo='"+c.getTitulo()+"';");
+            ResultSet rs = st.executeQuery("select * from Corso where titulo='"+c.getTitle()+"';");
             if(rs.next()) {
                 if (!rs.getBoolean("attiva")) {
-                    st.executeUpdate("update Corso set attiva=1 where titulo='"+c.getTitulo()+"';");
+                    st.executeUpdate("update Corso set attiva=1 where titulo='"+c.getTitle()+"';");
                     created = true;
                 }
             }
             else{
-                st.executeUpdate("INSERT INTO `Corso` (`titulo`, `attiva`) VALUES ('" + c.getTitulo() + "', '1');");
+                st.executeUpdate("INSERT INTO `Corso` (`titulo`, `attiva`) VALUES ('" + c.getTitle() + "', '1');");
                 created = true;
             }
         } catch (SQLException e){
@@ -253,9 +262,9 @@ public class DAO {
                 System.out.println("Connected to database from deleteCoursetoDB");
             }
             Statement st = conn1.createStatement();
-            st.executeUpdate("UPDATE Corso SET attiva=0 WHERE titulo='" + c.getTitulo() + "';");
-            st.executeUpdate("UPDATE Imparte SET attiva=0 WHERE corso='" + c.getTitulo() + "';");
-            st.executeUpdate("UPDATE  Prenotazione SET stato='CANCELLATA' WHERE  corso='" + c.getTitulo() + "';");
+            st.executeUpdate("UPDATE Corso SET attiva=0 WHERE titulo='" + c.getTitle() + "';");
+            st.executeUpdate("UPDATE Imparte SET attiva=0 WHERE corso='" + c.getTitle() + "';");
+            st.executeUpdate("UPDATE  Prenotazione SET stato='CANCELLATA' WHERE  corso='" + c.getTitle() + "';");
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }finally {
@@ -282,7 +291,7 @@ public class DAO {
             Utente u = p.getUser();
             Docente d = p.getTeacher();
             Corso c = p.getCourse();
-            st.executeUpdate("INSERT INTO 'prenotazione' ('usuario', 'nome', 'cognome', 'corso', 'giorno', 'ora', 'stato' ) VALUES ('" + u.getAccount() + "', '" + d.getName() + "', '"  + d.getSurname()  +"','"+c.getTitulo()+"','"+p.getDay()+"',"+p.getHour()+",'"+p.getState()+"');");
+            st.executeUpdate("INSERT INTO 'prenotazione' ('usuario', 'nome', 'cognome', 'corso', 'giorno', 'ora', 'stato' ) VALUES ('" + u.getAccount() + "', '" + d.getName() + "', '"  + d.getSurname()  +"','"+c.getTitle()+"','"+p.getDay()+"',"+p.getHour()+",'"+p.getState()+"');");
             reservated = true;
 
             } catch (SQLException e){
@@ -363,15 +372,15 @@ public class DAO {
             Docente d= new Docente(a.getName(),a.getSurname());
             Corso corso=a.getCourse();
 
-            ResultSet rs=st.executeQuery("SELECT * FROM Imparte WHERE nome='"+d.getName()+"' and cognome='"+d.getSurname()+"' and corso='"+corso.getTitulo()+"';");
+            ResultSet rs=st.executeQuery("SELECT * FROM Imparte WHERE nome='"+d.getName()+"' and cognome='"+d.getSurname()+"' and corso='"+corso.getTitle()+"';");
             if(rs.next()) {
                 if (!rs.getBoolean("attiva")) {
-                    st.executeUpdate("update Imparte set attiva=1 WHERE nome='"+d.getName()+"' and cognome='"+d.getSurname()+"' and corso='"+corso.getTitulo()+"';");
+                    st.executeUpdate("update Imparte set attiva=1 WHERE nome='"+d.getName()+"' and cognome='"+d.getSurname()+"' and corso='"+corso.getTitle()+"';");
                     created = true;
                 }
             }
            else{
-                st.executeUpdate("Insert into Imparte(nome, cognome, corso, attiva) VALUES ('" + d.getName() + "','" + d.getSurname() + "', '" + corso.getTitulo() + "', 1);");
+                st.executeUpdate("Insert into Imparte(nome, cognome, corso, attiva) VALUES ('" + d.getName() + "','" + d.getSurname() + "', '" + corso.getTitle() + "', 1);");
                 created=true;
            }
 
@@ -399,8 +408,8 @@ public class DAO {
             Statement st = conn1.createStatement();
             Docente d= new Docente(a.getName(),a.getSurname());
             Corso corso=a.getCourse();
-            st.executeUpdate("update Imparte set attiva=0 WHERE nome='"+d.getName()+"' and cognome='"+d.getSurname()+"' and corso='"+corso.getTitulo()+"';");
-            st.executeUpdate("update Prenotazione set stato='CANCELLATA' where nome='"+d.getName()+"'and cognome='"+d.getSurname()+"' and corso='"+corso.getTitulo()+"';");
+            st.executeUpdate("update Imparte set attiva=0 WHERE nome='"+d.getName()+"' and cognome='"+d.getSurname()+"' and corso='"+corso.getTitle()+"';");
+            st.executeUpdate("update Prenotazione set stato='CANCELLATA' where nome='"+d.getName()+"'and cognome='"+d.getSurname()+"' and corso='"+corso.getTitle()+"';");
             deleted = true;
 
         } catch (SQLException e){
@@ -486,7 +495,7 @@ public class DAO {
         }
         return lista;
     }
-    public static ArrayList<Docente> mostrareDoc(){
+    public static ArrayList<Docente> showTeacher(){
         Connection conn1 = null;
         ArrayList<Docente> lista = new ArrayList<Docente>();
         try{
@@ -515,19 +524,19 @@ public class DAO {
         return lista;
 
     }
-    public static ArrayList<Corso> mostrareCor(){
+    public static ArrayList<Corso> showCourses(){
         Connection conn1 = null;
-        ArrayList<Corso> lista = new ArrayList<Corso>();
+        ArrayList<Corso> lista = new ArrayList<>();
         try{
             conn1 = DriverManager.getConnection(url1,user,password);
             if (conn1 != null){
-                System.out.println("Connected to database from MostrareCor");
+                System.out.println("Connected to database from showCourses");
             }
             Statement st = conn1.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Corso WHERE attiva=1;");
             while(rs.next()) {
 
-                Corso corso= new Corso(rs.getString("corso"));
+                Corso corso= new Corso(rs.getString("titulo"));
                 lista.add(corso);
             }
         } catch (SQLException e){

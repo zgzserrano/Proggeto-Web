@@ -1,23 +1,25 @@
 package DAO;
 
 public class Corso {
-    private String titulo;
+    private String title;
 
     public Corso(String t){
-        this.titulo=t;
+        this.title=t;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getTitle() {
+        return title;
     }
 
     //Don't know if will be usefull
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
     public String toString(){
-        return this.titulo;
+        return this.title;
     }
+
+    public Corso(){}
 }

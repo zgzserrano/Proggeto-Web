@@ -88,14 +88,14 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                     break;
                 }
                 case "teacherList":
-                    out.println(JSONMan.serializeJson(mostrareDoc()));
+                    out.println(JSONMan.serializeJson(showTeacher()));
                     break;
                 case "associationList":
                     ArrayList<Imparte> i = showImpart();  //A ver la que me has liado juanito
                     out.println(JSONMan.serializeJson(i));
                     break;
                 case "courseList":
-                    out.println(JSONMan.serializeJson(mostrareCor()));
+                    out.println(JSONMan.serializeJson(showCourses()));
                     break;
                 case "make": {
                     Prenotazione p = JSONMan.parseJson(req.getParameter("reserve"), Prenotazione.class);
