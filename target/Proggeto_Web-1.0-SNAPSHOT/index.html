@@ -14,7 +14,7 @@
 
     <div id="pagWeb" onload="getCells()">
         <header>
-            <!--<h1 id="titleWeb">Sistema di prenotazioni di ripetizioni online</h1>-->
+            <!--<h1 id="titleWeb"> Sistema di prenotazioni di ripetizioni online</h1>-->
             <div v-if="!showLogin" id="logout">
                 <h3>Benvenuto {{account}}</h3>
                 <button v-on:click="logout" class="btn btn-outline-secondary"> Log Out</button>
@@ -64,7 +64,7 @@
                 <tr v-for="i in 4">
                     <th scope="row">{{hours[i-1]}}</th>
                     <td v-for="j in 5">
-                        <div v-for="k in (cells[(i-1)*5 +j-1]).free">
+                        <div v-for="k in (cells[(i-1)*5 +j-1]).tableFree">
                             <h4>{{k.d.name}} {{k.d.surname}}</h4>
                             <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9,v.title)"> </div>
                         </div>
@@ -101,13 +101,13 @@
                     <th v-if="!admin" scope="col">Effettuare</th>
                     <th scope="col">Disdire</th>
                 </tr>
-                <tr v-for="p in attivi">
-                    <td v-if="admin" >{{p.u.user}}</td>
+                <tr v-for="p in returnActives">
+                    <td v-if="admin" >{{p.user.account}}</td>
                     <td>{{p.hour}}</td>
                     <td>{{p.day}}</td>
-                    <td>{{p.d.surname}}</td>
-                    <td>{{p.d.name}}</td>
-                    <td>{{p.c.title}}</td>
+                    <td>{{p.teacher.surname}}</td>
+                    <td>{{p.teacher.name}}</td>
+                    <td>{{p.course.titulo}}</td>
                     <td v-if="!admin"><button v-on:click="make(p)" class="btn btn-warning">EFF</button></td>
                     <td><button v-on:click="cancel(p)" class="btn btn-danger">X</button></td>
                 </tr>
@@ -126,12 +126,12 @@
                     <th scope="col">Disdire</th>
                 </tr>
                 <tr v-for="p in effettuati">
-                    <td v-if="admin">{{p.u.user}}</td>
+                    <td v-if="admin">{{p.user.account}}</td>
                     <td>{{p.hour}}</td>
                     <td>{{p.day}}</td>
-                    <td>{{p.d.surname}}</td>
-                    <td>{{p.d.name}}</td>
-                    <td>{{p.c.title}}</td>
+                    <td>{{p.teacher.surname}}</td>
+                    <td>{{p.teacher.name}}</td>
+                    <td>{{p.course.titulo}}</td>
                     <td><button v-on:click="cancel(p)" class="btn btn-danger">X</button></td>
                 </tr>
             </table>
@@ -148,12 +148,12 @@
                     <th scope="col">Corso</th>
                 </tr>
                 <tr v-for="p in disdeti">
-                    <td v-if="admin">{{p.u.user}}</td>
+                    <td v-if="admin">{{p.user.account}}</td>
                     <td>{{p.hour}}</td>
                     <td>{{p.day}}</td>
-                    <td>{{p.d.surname}}</td>
-                    <td>{{p.d.name}}</td>
-                    <td>{{p.c.title}}</td>
+                    <td>{{p.teacher.surname}}</td>
+                    <td>{{p.teacher.name}}</td>
+                    <td>{{p.course.titulo}}</td>
                 </tr>
             </table>
 
@@ -171,8 +171,9 @@
             </nav>
         </aside>
 
-        <div data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="impos" id="#myReserves">
+        <div data-spy="scroll" data-target="#navbar-example3" data-offset="0" v-if="impos" id="myReserves">
             <h2>Impostazioni</h2>
+
             <h3 id="idoc" class="titleTable">Inserire docente:</h3>
             <div  class="field">
                 <div class="input-group input-group-sm mb-3">
@@ -183,7 +184,7 @@
                 </div>
             </div>
 
-        <label v-if="errorTeachName" class="alert alert-danger"> Campo vuoto </label>
+          <label v-if="errorTeachName" class="alert alert-danger"> Campo vuoto </label>
         <div class="field">
             <div class="input-group input-group-sm mb-3" class="field">
                 <div class="input-group-prepend">
@@ -217,7 +218,7 @@
         <h3 id="icor" class="titleTable">Inserire corso:</h3>
         <div class="field">
             <div class="input-group input-group-sm mb-3">
-                <div class="input-group-prepenmyReservesd">
+                <div class="input-group-prepen">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Corso: </span>
                 </div>
                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  v-model="title" required>
@@ -259,7 +260,7 @@
 
         <div v-for="a in associationList">
             <h4>
-                {{a.d.surname}}, {{a.d.name}}
+                {{a.teacher.surname}}, {{a.teacher.name}}
             </h4>
             <table class="table">
                 <thead>
@@ -307,7 +308,6 @@
                 courseSelect: '',
                 name:'',
                 surname:'',
-                course:'',
                 cells: [],
                 checked: [],
                 hours:[15,16,17,18],
@@ -439,13 +439,13 @@
                 if (!self.errorCourse) {
                     $.post(this.link, {action: "addCourse", course: this.course}, function (data) {
                         if (data) {
-                            alert("Il corso " + self.course + " ha stato inserito.");
-                            var c = {title: self.course};
+                            alert("Il corso " + self.title + " ha stato inserito.");
+                            var c = {title: self.title};
                             self.courseList.push(c);//JSON.parse(c));
                         } else {
-                            alert("Il corso " + self.course + " è già registrato.");
+                            alert("Il corso " + self.title + " è già registrato.");
                         }
-                        self.course = '';
+                        self.title = '';
                     });
                 }
             },

@@ -28,4 +28,5 @@ public class Docente {
     public String toString(){
         return this.name + " " + this.surname;
     }
+    public Docente(){}
 }

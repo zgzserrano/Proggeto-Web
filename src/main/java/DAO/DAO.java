@@ -88,7 +88,7 @@ public class DAO {
                 System.out.println("Connected to db from addDocenteToDB");
             }
             Statement st = conn1.createStatement();
-            st.executeUpdate("INSERT INTO 'docente' ('nome', 'cognome', 'attiva' ) VALUES ('" + d.getName() + "', '"  + d.getSurname() + "', '1');" );
+            st.executeUpdate("INSERT INTO `Docente` (`nome`, `cognome`, `attiva`) VALUES ('" + d.getName() + "', '" + d.getSurname() + "', '1');" );
             added = true;
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -224,8 +224,8 @@ public class DAO {
             }
             Statement st = conn1.createStatement();
             st.executeUpdate("UPDATE Docente SET attiva=0 WHERE nome='" + d.getName() + "' AND cognome='" +  d.getSurname() + "';");
-            st.executeUpdate("UPDATE Imparte SET attiva=0 WHERE nome='" + d.getName() + "' AND cognome='" + d.getSurname() + "';");
-            st.executeUpdate("UPDATE Prenotazione SET stato='CANCELLATA' WHERE nome='" + d.getName() + "' AND cognome='" + d.getSurname() + "';");
+            st.executeUpdate("UPDATE  Imparte SET attiva=0 WHERE nome='" + d.getName() + "' AND cognome='" + d.getSurname() + "';");
+            st.executeUpdate("UPDATE  Prenotazione SET stato='CANCELLATA' WHERE nome='" + d.getName() + "' AND cognome='" + d.getSurname() + "';");
             deleted = true;
         } catch (SQLException e){
             System.out.println(e.getMessage());

@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Cell {
     private String day;
     private int hour;
-    private ArrayList<Imparte> table;
+    private ArrayList<Imparte> tableFree;
 
 
     public Cell(String day,int hour,ArrayList<Imparte> table){
         this.day=day;
         this.hour=hour;
-        this.table=table;
+        this.tableFree=table;
     }
 
     public int getHour() {
@@ -22,8 +22,8 @@ public class Cell {
         return day;
     }
 
-    public ArrayList<Imparte> getTable() {
-        return table;
+    public ArrayList<Imparte> getTableFree() {
+        return tableFree;
     }
 }
 

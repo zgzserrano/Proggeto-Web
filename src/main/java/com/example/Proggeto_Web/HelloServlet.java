@@ -31,7 +31,6 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                 case "connection": {
                     String account = req.getParameter("user");
                     String pass = req.getParameter("password");
-                    System.out.println("user name is" + account + pass);
                     if (correctPass(account, pass)) {
                         if (account != null && pass != null) {
                             session.setAttribute("account", account);
@@ -93,7 +92,6 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                     break;
                 case "associationList":
                     ArrayList<Imparte> i = showImpart();  //A ver la que me has liado juanito
-
                     out.println(JSONMan.serializeJson(i));
                     break;
                 case "courseList":
@@ -118,7 +116,7 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                     break;
                 case "addDoc": {
                     String name = req.getParameter("name");
-                    String surName = req.getParameter("surName");
+                    String surName = req.getParameter("surname");
                     Docente p = new Docente(name, surName);
                     if (addDocenteToDB(p)) {
                         out.print("true");

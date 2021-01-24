@@ -1,19 +1,24 @@
 package DAO;
 
 public class Associazione {
-    private Docente d;
+    private Docente teacher;
 
     private Corso corso;
     public Associazione(Docente doc, Corso c){
-        d=doc;
+        teacher=doc;
         corso=c;
     }
+
+    public Docente getTeacher() {
+        return teacher;
+    }
+
     public String getName(){
-        return d.getName();
+        return teacher.getName();
     }
 
     public String getSurname(){
-        return d.getSurname();
+        return teacher.getSurname();
     }
 
     public Corso getCourse(){
