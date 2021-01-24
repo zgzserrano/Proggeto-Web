@@ -13,11 +13,12 @@
 <body>
 
     <div id="pagWeb" onload="getCells()">
-        <header>
+        <header id="header"> <img id="logo" src="img/inflogo.png" atl="logo">
             <!--<h1 id="titleWeb"> Sistema di prenotazioni di ripetizioni online</h1>-->
             <div v-if="!showLogin" id="logout">
                 <h3>Benvenuto {{account}}</h3>
-                <button v-on:click="logout" class="btn btn-outline-secondary"> Log Out</button>
+                <br>
+                <button v-on:click="logout" class="btn btn-outline-secondary" style="margin-bottom: 10px;"> Log Out</button>
             </div>
             <div v-if="showLogin" id="log">
                 <div class="input-group input-group-sm mb-3">
@@ -30,15 +31,15 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-sm2">Password</span>
                     </div>
-                    <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm2" v-model="pass" required>
+                    <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm2" v-model="pass" align="center" required>
                 </div>
-                <p><button v-on:click="tryLogin" class="btn btn-ligh"> Log In</button></p>
+                <p id="loginButton" ><button v-on:click="tryLogin" class="btn btn-ligh"> Log In</button></p>
                 <span v-if="loginFail" class="alert alert-danger" > Password o utente sbagliato </span>
             </div>
         </header>
 
     <!-- Hay que poner las opciones de si ya esta registrado -->
-        <nav v-if="!showLogin" class="navbar navbar-expand-lg navbar-dark bg-dar">
+        <nav v-if="!showLogin" class="navbar navbar-expand-lg navbar-light" style="margin: auto; align-items: center">
             <div id="navbar">
                 <span class="navbar-brand mb-0 h1"><button v-on:click="hider(); tableShow = true">Prenotare</button></span>
                 <span class="navbar-brand mb-0 h1" v-if="!admin"><button    v-on:click="hider(); showPrenotazioneList = true">I miei prenotazioni</button></span>
@@ -48,9 +49,9 @@
         </nav>
 
         <article id="tableShow" v-if="tableShow">
-            <h3 class="DispPrenotazione"> Prenotazioni disponibili.</h3>
+            <h3 class="DispPrenotazione"> PRENOTAZIONI DISPONIBLI</h3>
             <table class="table table-striped">
-                <thead>
+                <thead class="thead-dark">
                     <tr>
                         <th scope="col">ORA/GIORNO</th>
                         <th scope="col">LUNEDI</th>
@@ -147,7 +148,7 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Corso</th>
                 </tr>
-                <tr v-for="p in disdeti">
+                <tr v-for="p in returnCancels">
                     <td v-if="admin">{{p.user.account}}</td>
                     <td>{{p.hour}}</td>
                     <td>{{p.day}}</td>

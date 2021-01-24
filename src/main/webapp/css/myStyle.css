@@ -1,3 +1,12 @@
+body{
+    background-image: url("../img/logo_univ2.png");
+
+}
+
+#loginButton{
+    text-align: center;
+}
+
 #pagWeb {
     width: 85%;
     margin: auto;
@@ -6,15 +15,24 @@
 #log {
     width: 25%;
     float: right;
-    background: lightyellow;
+    border-style: solid;
     border-radius: 5px;
+    border-color: #343a40;
+    border-width: 1px;
+    background: lightgray;
+    box-shadow: 3px 3px;
 }
 
 #logout {
     width: 25%;
     float: right;
-    background: lightyellow;
+    border-style: solid;
     border-radius: 5px;
+    border-color: #343a40;
+    border-width: 1px;
+    background: lightgray;
+    box-shadow: 3px 3px;
+    text-align: center;
 }
 
 #titleWeb {
@@ -23,7 +41,16 @@
 }
 
 #tableShow{
+    margin: auto;
     clear: bottom;
+    margin-top: 100px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    box-shadow: gray;
+    border-color: gray;
+    box-shadow: 5px 5px;
+
 }
 
 #myReserves {
@@ -32,6 +59,10 @@
     margin-bottom: 5%;
     margin-top: 7%;
 
+}
+
+#header{
+    margin: 20px;
 }
 
 aside {
@@ -44,6 +75,11 @@ aside {
     top: 0;
 }
 
+.DispPrenotazione{
+    text-align: center;
+
+}
+
 footer {
     width: 100%;
     clear: both;
@@ -51,6 +87,10 @@ footer {
     margin-top: 30px;
     background-color: #343a40;
     color: #ffffff;
+}
+
+#logo {
+    width: 38%;
 }
 
 header {
@@ -76,7 +116,6 @@ nav div span button {
 
 .titleTable {
     color: darkgray;
-    margin-top: 15px;
     clear: both;
 }
 
@@ -89,3 +128,4 @@ nav div span button {
     width: 65%;
     margin-bottom: 10px;
 }
+
