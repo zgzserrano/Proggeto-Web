@@ -66,7 +66,7 @@
                     <th scope="row">{{hours[i-1]}}</th>
                     <td v-for="j in 5">
                         <div v-for="k in (cells[(i-1)*5 +j-1]).tableFree">
-                            <h4>{{k.d.name}} {{k.d.surname}}</h4>
+                            <h4>{{k.teacher.name}} {{k.teacher.surname}}</h4>
                             <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.d.name+9+k.d.surname+9,v.title)"> </div>
                         </div>
                     </td>
@@ -436,9 +436,10 @@
 
             addCourse:function(){
                 var self = this;
-                self.errorCourse = (this.course === "");
+                self.errorCourse = (self.title === "");
+                console.log(self.title);
                 if (!self.errorCourse) {
-                    $.post(this.link, {action: "addCourse", course: this.course}, function (data) {
+                    $.post(this.link, {action: "addCourse", course: this.title}, function (data) {
                         if (data) {
                             alert("Il corso " + self.title + " ha stato inserito.");
                             var c = {title: self.title};

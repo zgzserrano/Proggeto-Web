@@ -159,9 +159,8 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                 }
                 case "addCourse": {
                     String title = req.getParameter("course");
-
-                    Corso p = new Corso(title);
-                    if (addCoursetoDB(p)) {
+                    Corso c = new Corso(title);
+                    if (addCoursetoDB(c)) {
                         out.print("true");
                     } else {
                         out.print("false");
