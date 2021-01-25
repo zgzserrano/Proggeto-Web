@@ -52,4 +52,6 @@ public class Prenotazione {
                 ", state='" + state + '\'' +
                 '}';
     }
+
+    public Prenotazione(){}
 }

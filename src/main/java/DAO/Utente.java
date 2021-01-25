@@ -28,7 +28,10 @@ public class Utente {
     public String toString() {
         return account + " " + password;
     }
+
     public Utente(String account){  //to show arrays where we dont know the password or if its an admin
         this.account=account;
     }
+
+    public Utente(){}
 }

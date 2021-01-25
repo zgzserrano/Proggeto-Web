@@ -67,7 +67,7 @@
                     <td v-for="j in 5">
                         <div v-for="k in (cells[(i-1)*5 +j-1]).tableFree">
                             <h4>{{k.teacher.name}} {{k.teacher.surname}}</h4>
-                            <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.teacher.name+9+k.d.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.teacher.name+9+k.d.surname+9,v.title)"> </div>
+                            <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.teacher.name+9+k.teacher.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.teacher.name+9+k.teacher.surname+9,v.title)"> </div>
                         </div>
                     </td>
                 </tr>
@@ -126,7 +126,7 @@
                     <th scope="col">Corso</th>
                     <th scope="col">Disdire</th>
                 </tr>
-                <tr v-for="p in effettuati">
+                <tr v-for="p in returnDones">
                     <td v-if="admin">{{p.user.account}}</td>
                     <td>{{p.hour}}</td>
                     <td>{{p.day}}</td>
@@ -523,9 +523,9 @@
                     for (var c of self.checked){
                         var stringe = c.split("9");
                         var doc = {name: stringe[2], surname: stringe[3]};
-                        var utente = {user: self.account, pass: self.pass, admin: self.admin};
+                        var utente = {account: self.account, password: self.pass, admin: self.admin};
                         var corso = {title: stringe[4]};
-                        var p = {hour: stringe[1], day: stringe[0], d: doc, c: corso, u: utente, state: "ATTIVA"};
+                        var p = {hour: stringe[1], day: stringe[0], teacher: doc, course: corso, user: utente, state: "ATTIVA"};
                         reserv.push(p);
                         self.reserveList.push(p);
                     }

@@ -77,8 +77,9 @@ public class HelloServlet extends javax.servlet.http.HttpServlet {
                     break;
                 case "reserveList": {
                     String account = req.getParameter("user");
+                    boolean admin = getRole(account);
                     ArrayList<Prenotazione> reserves;
-                    if (account.equals("ad"))
+                    if (account.equals(admin))
                         reserves = getPrenotazioni();
                     else {
                         reserves = getPrenotazioni(account);

@@ -291,7 +291,7 @@ public class DAO {
             Utente u = p.getUser();
             Docente d = p.getTeacher();
             Corso c = p.getCourse();
-            st.executeUpdate("INSERT INTO 'prenotazione' ('usuario', 'nome', 'cognome', 'corso', 'giorno', 'ora', 'stato' ) VALUES ('" + u.getAccount() + "', '" + d.getName() + "', '"  + d.getSurname()  +"','"+c.getTitle()+"','"+p.getDay()+"',"+p.getHour()+",'"+p.getState()+"');");
+            st.executeUpdate("INSERT INTO Prenotazione(`usuario`, `nome`, `cognome`, `corso`, `giorno`, `ora`, `stato`) VALUES ('"+u.getAccount()+"','"+d.getName()+"','"+d.getSurname()+"','"+c.getTitle()+"','"+p.getDay()+"',"+p.getHour()+",'"+p.getState()+"');");
             reservated = true;
 
             } catch (SQLException e){
@@ -317,7 +317,7 @@ public class DAO {
                 System.out.println("Connected to database from delete");
             }
             Statement st = conn1.createStatement();
-            st.executeUpdate("UPDATE Prenotazione  set stato='CANCELLATA' where usuario='"+p.getUser()+"' and ora="+p.getHour()+" and giorno='"+p.getDay()+"' and nome="+p.getTeacher()+"''" );
+            st.executeUpdate("UPDATE Prenotazione  set stato='CANCELLATA' where usuario='"+p.getUser().getAccount()+"' and ora="+p.getHour()+" and giorno='"+p.getDay()+"'");
              deleted = true;
 
         } catch (SQLException e){
@@ -343,7 +343,7 @@ public class DAO {
                 System.out.println("Connected to database from achieve");
             }
             Statement st = conn1.createStatement();
-            st.executeUpdate("UPDATE Prenotazione  set stato='EFFETTUATA' where usuario='"+p.getUser()+"' and ora="+p.getHour()+" and giorno='"+p.getDay()+"' and nome="+p.getTeacher()+"''" );
+            st.executeUpdate("UPDATE Prenotazione  set stato='EFFETTUATA' where usuario='"+p.getUser().getAccount()+"' and ora="+p.getHour()+" and giorno='"+p.getDay()+"'");
             achieved = true;
 
         } catch (SQLException e){
