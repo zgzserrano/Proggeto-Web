@@ -3,10 +3,10 @@ package DAO;
 public class Associazione {
     private Docente teacher;
 
-    private Corso corso;
+    private Corso course;
     public Associazione(Docente doc, Corso c){
         teacher=doc;
-        corso=c;
+        course=c;
     }
 
     public Docente getTeacher() {
@@ -22,7 +22,7 @@ public class Associazione {
     }
 
     public Corso getCourse(){
-        return corso;
+        return course;
     }
 
 }
