@@ -65,9 +65,10 @@
                 <tr v-for="i in 4">
                     <th scope="row">{{hours[i-1]}}</th>
                     <td v-for="j in 5">
-                        <div v-for="k in (cells[(i-1)*5 +j-1]).tableFree">
-                            <h4>{{k.teacher.name}} {{k.teacher.surname}}</h4>
+                        <div v-for="(k,index) in (cells[(i-1)*5 +j-1]).tableFree">
+                            <h6>{{k.teacher.name}} {{k.teacher.surname}}</h6>
                             <div v-for="v of k.course">{{v.title}} <input :id="days[j-1]+9+hours[i-1]+9+k.teacher.name+9+k.teacher.surname+9+v.title" v-if="!showLogin" type="checkbox" v-on:click="CheckReserve(days[j-1]+9+hours[i-1]+9+k.teacher.name+9+k.teacher.surname+9,v.title)"> </div>
+                            <div v-if="index !== (cells[(i-1)*5 +j-1]).tableFree.length - 1"> <hr> </div>
                         </div>
                     </td>
                 </tr>
